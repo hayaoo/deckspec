@@ -52,22 +52,14 @@ async function listPatternNames(patternsDir: string): Promise<string[]> {
 }
 
 /**
- * Resolve the monorepo root from the CLI package location.
- * Walks up from packages/cli/src/commands/ (or dist/) to find themes/.
+ * Resolve the templates directory bundled with the CLI package.
+ * Works both in dev (src/commands/) and installed (dist/commands/).
+ *
+ * __dirname is packages/cli/dist/commands or packages/cli/src/commands
+ * Go up 2 levels to packages/cli/, then into templates/
  */
-function resolveMonorepoRoot(): string {
-  // In dev: packages/cli/src/commands/init.ts → up 4
-  // In dist: packages/cli/dist/commands/init.js → up 4
-  let dir = __dirname;
-  for (let i = 0; i < 6; i++) {
-    const candidate = join(dir, "themes");
-    // Synchronous existence check via try/catch is avoided;
-    // we just go up 4 levels from commands/ which should land at monorepo root.
-    dir = dirname(dir);
-  }
-  // __dirname is packages/cli/dist/commands or packages/cli/src/commands
-  // Go up 4 levels: commands → dist/src → cli → packages → root
-  return resolve(__dirname, "..", "..", "..", "..");
+function resolveTemplatesDir(): string {
+  return resolve(__dirname, "..", "..", "templates");
 }
 
 function generateSampleDeck(theme: string): string {
@@ -231,8 +223,8 @@ export async function initCommand(args: string[]): Promise<void> {
   }
 
   const root = resolve(targetDir);
-  const monorepoRoot = resolveMonorepoRoot();
-  const themeSrc = join(monorepoRoot, "themes", themeName);
+  const templatesDir = resolveTemplatesDir();
+  const themeSrc = join(templatesDir, themeName);
 
   // Verify theme exists
   try {

@@ -1,7 +1,11 @@
 {
   "name": "@deckspec/cli",
-  "version": "0.1.1",
-  "files": ["dist", "src"],
+  "version": "0.1.2",
+  "files": [
+    "dist",
+    "src",
+    "templates"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

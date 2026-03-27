@@ -105,8 +105,18 @@ async function main(): Promise<void> {
     }
 
     case "dev": {
-      const dir = args[1] || process.cwd();
-      await devCommand(dir);
+      let devDir = process.cwd();
+      let devPort: number | undefined;
+      const devArgs = args.slice(1);
+      for (let i = 0; i < devArgs.length; i++) {
+        if (devArgs[i] === "--port" && devArgs[i + 1]) {
+          devPort = parseInt(devArgs[i + 1], 10);
+          i++;
+        } else if (!devArgs[i].startsWith("-")) {
+          devDir = devArgs[i];
+        }
+      }
+      await devCommand(devDir, { port: devPort });
       break;
     }
 

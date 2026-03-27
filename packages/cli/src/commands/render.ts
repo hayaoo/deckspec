@@ -1,5 +1,5 @@
-import { writeFile } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { writeFile, mkdir } from "node:fs/promises";
+import { resolve, dirname, extname, join } from "node:path";
 import { loadDeckFile, validateDeck } from "@deckspec/dsl";
 import type { Deck } from "@deckspec/schema";
 import { renderDeck, loadThemeCSS, extractThemeName, resolveThemePatternsDir, resolveThemePatternsSrcDir, compileTsxCached } from "@deckspec/renderer";
@@ -45,6 +45,15 @@ export async function renderCommand(
   const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
   const html = await renderDeck(deck, themeCSS, { basePath, patternsDir, patternsSrcDir });
 
-  await writeFile(outputPath, html, "utf-8");
-  console.log(`\u2713 Rendered ${result.results.length} slide(s) to ${outputPath}`);
+  // If outputPath has no .html extension, treat it as a directory
+  let finalPath = outputPath;
+  if (extname(outputPath) !== ".html") {
+    finalPath = join(outputPath, "index.html");
+    await mkdir(outputPath, { recursive: true });
+  } else {
+    await mkdir(dirname(outputPath), { recursive: true });
+  }
+
+  await writeFile(finalPath, html, "utf-8");
+  console.log(`\u2713 Rendered ${result.results.length} slide(s) to ${finalPath}`);
 }

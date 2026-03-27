@@ -5,7 +5,7 @@ import type { Deck, Slide } from "@deckspec/schema";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { renderDeck, renderDashboard, renderSlide, renderThemeDetail, loadThemeCSS, loadThemeTokens, extractThemeName, resolveThemePatternsDir, resolveThemePatternsSrcDir, compileTsxCached, clearCompileCache, type DeckWithPreviews, type ThemeSummary } from "@deckspec/renderer";
 
-const PORT = 3002;
+let PORT = 3002;
 
 /** SSE clients for live reload */
 const sseClients = new Set<ServerResponse>();
@@ -308,8 +308,9 @@ async function handleRequest(
   }
 }
 
-export async function devCommand(dir: string): Promise<void> {
+export async function devCommand(dir: string, options?: { port?: number }): Promise<void> {
   const baseDir = resolve(dir);
+  if (options?.port != null) PORT = options.port;
 
   // Try dynamic import of chokidar for file watching
   let watcherActive = false;
