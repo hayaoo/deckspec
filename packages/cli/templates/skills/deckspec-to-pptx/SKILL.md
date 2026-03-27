@@ -16,14 +16,14 @@ Convert a DeckSpec deck.yaml to a PowerPoint (.pptx) file.
 ### 1. Run the conversion
 
 ```bash
-node scripts/deck-to-pptx.mjs decks/<deck-name>/deck.yaml -o output/<deck-name>.pptx
+node .claude/skills/deckspec-to-pptx/deck-to-pptx.mjs decks/<deck-name>/deck.yaml -o output/<deck-name>.pptx
 ```
 
 ### 2. Check for warnings
 
 The script warns for unregistered patterns: `⚠ No pptx renderer for pattern "<name>" — blank slide`
 
-To fix, add a renderer function in `scripts/deck-to-pptx.mjs`.
+To fix, add a renderer function in `.claude/skills/deckspec-to-pptx/deck-to-pptx.mjs`.
 
 ### 3. Open and verify
 

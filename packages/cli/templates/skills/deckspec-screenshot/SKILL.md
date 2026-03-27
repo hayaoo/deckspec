@@ -22,7 +22,7 @@ npx deckspec render decks/<deck-name>/deck.yaml -o output/<deck-name>
 ### 2. Run the screenshot script
 
 ```bash
-node scripts/screenshot-deck.mjs output/<deck-name>/index.html output/<deck-name>-slides
+node .claude/skills/deckspec-screenshot/screenshot-deck.mjs output/<deck-name>/index.html output/<deck-name>-slides
 ```
 
 This will:
