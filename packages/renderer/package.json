@@ -1,0 +1,35 @@
+{
+  "name": "@deckspec/renderer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@deckspec/dsl": "workspace:*",
+    "@deckspec/schema": "workspace:*",
+    "esbuild": "^0.27.4",
+    "zod": "^3.23.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hayaoo/deckspec",
+    "directory": "packages/renderer"
+  },
+  "homepage": "https://github.com/hayaoo/deckspec",
+  "bugs": {
+    "url": "https://github.com/hayaoo/deckspec/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

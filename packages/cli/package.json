@@ -1,0 +1,38 @@
+{
+  "name": "@deckspec/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "deckspec": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@deckspec/dsl": "workspace:*",
+    "@deckspec/schema": "workspace:*",
+    "@deckspec/renderer": "workspace:*",
+    "chokidar": "^4.0.0",
+    "js-yaml": "^4.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.23.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hayaoo/deckspec",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/hayaoo/deckspec",
+  "bugs": {
+    "url": "https://github.com/hayaoo/deckspec/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

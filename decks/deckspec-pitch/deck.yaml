@@ -1,0 +1,317 @@
+meta:
+  title: "DeckSpec — Programmable Presentations"
+  theme: noir-display
+  state: active
+slides:
+  # 1. タイトル
+  - file: title-center
+    vars:
+      title: "DeckSpec"
+      subtitle: "YAML で書く。Zod で守る。React で描く。"
+
+  # 2. ビジョン
+  - file: hero-statement
+    vars:
+      eyebrow: "Why DeckSpec"
+      headline: "プレゼンは\nコードである。"
+      body: "デザインの一貫性をテーマに閉じ込め、コンテンツは YAML だけで完結する。プログラマブルなプレゼンテーション基盤。"
+
+  # 3. 数値インパクト
+  - file: big-number
+    vars:
+      label: "Developer Experience"
+      value: "0"
+      unit: "ビルドステップ"
+      headline: "YAML を書いたら、もう動く。"
+      description: "deck.yaml を保存した瞬間にライブプレビューが更新。.tsx パターンも esbuild でオンザフライコンパイル。明示的なビルドは不要です。"
+
+  # 4. コアアーキテクチャ
+  - file: three-pillars
+    vars:
+      label: "Architecture"
+      heading: "2層モデル"
+      pillars:
+        - title: "Theme"
+          value: "Design"
+          description: "色・フォント・CSS・パターン（.tsx + Zod）をテーマに集約。デザインシステムとしてバージョン管理。"
+        - title: "Deck"
+          value: "Content"
+          description: "deck.yaml でパターンを参照し、vars でコンテンツを注入するだけ。HTML や React の知識は不要。"
+        - title: "Pipeline"
+          value: "SSR"
+          description: "Zod バリデーション → React SSR → スタンドアロン HTML。外部依存ゼロの自己完結型出力。"
+
+  # 5. 特徴リスト
+  - file: bullet-list
+    vars:
+      label: "Features"
+      heading: "開発者が求めていたもの"
+      items:
+        - title: "YAML DSL"
+          description: "プレゼンの内容を構造化データとして記述。Git で差分管理、CI でバリデーション。"
+        - title: "Zod スキーマ検証"
+          description: "パターンごとに vars の型を定義。タイポや型ミスをビルド前に検出。"
+        - title: "デッキローカルパターン"
+          description: "案件固有のレイアウトはデッキ側に配置。テーマの純度を保ちながら自由にカスタマイズ。"
+        - title: "テーマコンポーネント"
+          description: "SlideHeader, Card, VerdictIcon — テーマが提供する再利用可能なUIパーツ。"
+        - title: "ライブプレビュー"
+          description: "deckspec dev で即座にブラウザ確認。ファイル保存で自動リロード。"
+
+  # 6. メトリクス
+  - file: feature-metrics
+    vars:
+      headline: "実績"
+      metrics:
+        - label: "テーマパターン"
+          value: "80+"
+        - label: "Zod 検証率"
+          value: "100%"
+        - label: "外部依存"
+          value: "0"
+
+  # 7. アイコングリッド — エコシステム
+  - file: icon-grid
+    vars:
+      label: "Ecosystem"
+      heading: "すべてが揃っている"
+      items:
+        - icon: "file-code-2"
+          title: "YAML DSL"
+          description: "構造化されたスライド定義"
+        - icon: "shield-check"
+          title: "Zod 検証"
+          description: "型安全なバリデーション"
+        - icon: "palette"
+          title: "テーマ"
+          description: "デザインシステムを内包"
+        - icon: "terminal"
+          title: "CLI"
+          description: "validate / render / dev"
+        - icon: "eye"
+          title: "ライブプレビュー"
+          description: "保存即反映の開発体験"
+        - icon: "git-branch"
+          title: "Git ネイティブ"
+          description: "差分・履歴・レビュー"
+
+  # 8. チャート — 導入効果
+  - file: chart-bar
+    vars:
+      label: "Impact"
+      heading: "スライド制作時間の変化"
+      series1Name: "従来 (時間)"
+      series2Name: "DeckSpec (時間)"
+      data:
+        - label: "初回作成"
+          value: 8
+          value2: 2
+        - label: "テーマ変更"
+          value: 12
+          value2: 0.5
+        - label: "10枚追加"
+          value: 6
+          value2: 1
+        - label: "レビュー"
+          value: 3
+          value2: 0.5
+        - label: "修正反映"
+          value: 4
+          value2: 0.3
+
+  # 9. フロー図 — パイプライン
+  - file: flow-diagram
+    vars:
+      label: "Pipeline"
+      heading: "YAML からプレゼンへ"
+      steps:
+        - title: "deck.yaml"
+          description: "YAML でコンテンツを記述"
+        - title: "Zod 検証"
+          description: "スキーマで型チェック"
+        - title: "React SSR"
+          description: "パターンをサーバーレンダリング"
+        - title: "HTML 出力"
+          description: "スタンドアロンファイル"
+
+  # 10. 写真 — 開発体験
+  - file: photo-split
+    vars:
+      label: "Developer Experience"
+      heading: "コードを書くように、プレゼンを作る。"
+      body: "エディタで deck.yaml を編集し、保存した瞬間にブラウザでプレビューが更新される。デザイナーが作ったテーマのパターンを呼び出すだけで、一貫性のあるスライドが完成します。"
+      image: "code-laptop.jpg"
+      imagePosition: "right"
+
+  # 11. プラン比較
+  - file: comparison-columns
+    vars:
+      heading: "従来のスライド制作との比較"
+      columns:
+        - name: "PowerPoint / Keynote"
+          items:
+            - "GUI でレイアウトを手動調整"
+            - "デザインの一貫性は人間頼み"
+            - "バージョン管理が困難"
+            - "テンプレート変更が全体に波及"
+        - name: "DeckSpec"
+          highlighted: true
+          items:
+            - "YAML で構造化されたコンテンツ"
+            - "Zod + テーマで一貫性を自動保証"
+            - "Git で完全な変更履歴"
+            - "デッキローカルパターンで変更を局所化"
+
+  # --- 4基本型パターン ---
+
+  # 課題提起型
+  - file: challenge-cards
+    vars:
+      label: "課題"
+      heading: "従来のスライド制作が抱える3つの問題"
+      challenges:
+        - title: "デザインの属人化"
+          icon: "user-x"
+          items:
+            - "作成者によってクオリティがバラバラ"
+            - "テンプレートを配布しても守られない"
+            - "ブランドガイドラインの逸脱が常態化"
+        - title: "バージョン管理の不在"
+          icon: "git-branch"
+          items:
+            - "ファイル名に日付を付けて管理"
+            - "誰がいつ何を変えたか追えない"
+            - "修正の巻き戻しが困難"
+        - title: "再利用性の低さ"
+          icon: "copy"
+          items:
+            - "毎回ゼロからレイアウトを組む"
+            - "過去資産の検索・流用が非効率"
+            - "ナレッジが個人に閉じてしまう"
+
+  # ロードマップ型
+  - file: phased-roadmap
+    vars:
+      label: "Roadmap"
+      heading: "DeckSpec 導入ロードマップ"
+      banner: "プレゼン品質の標準化とスピードの両立"
+      phases:
+        - name: "Phase 1"
+          title: "テーマ構築"
+          items:
+            - "ブランドカラー・フォントのトークン定義"
+            - "基本パターン 5-10 種の作成"
+            - "design.md でデザイン原則を文書化"
+        - name: "Phase 2"
+          title: "チーム展開"
+          items:
+            - "YAML DSL の社内レクチャー"
+            - "既存プレゼンの DeckSpec 移行"
+            - "承認フローの運用開始"
+        - name: "Phase 3"
+          title: "スケール"
+          items:
+            - "AI によるスライド自動生成"
+            - "パターンライブラリの拡充"
+            - "マルチテーマ対応"
+
+  # 一覧化型
+  - file: showcase-grid
+    vars:
+      label: "Use Cases"
+      heading: "DeckSpec の活用シーン"
+      items:
+        - category: "営業"
+          icon: "briefcase"
+          title: "提案資料の標準化"
+        - category: "マーケ"
+          icon: "megaphone"
+          title: "キャンペーン説明資料"
+        - category: "エンジニア"
+          icon: "code"
+          title: "技術プレゼン・LT"
+        - category: "経営"
+          icon: "bar-chart-2"
+          title: "投資家向けピッチデッキ"
+        - category: "人事"
+          icon: "users"
+          title: "採用説明会スライド"
+        - category: "教育"
+          icon: "graduation-cap"
+          title: "研修・トレーニング資料"
+        - category: "プロダクト"
+          icon: "rocket"
+          title: "リリースノート発表"
+        - category: "カスタマー"
+          icon: "headphones"
+          title: "オンボーディング資料"
+
+  # ボディ＆メッセージ型
+  - file: body-message
+    vars:
+      label: "Architecture"
+      heading: "DeckSpec のコンテンツフロー"
+      center: "React SSR エンジン"
+      nodes:
+        - id: "A"
+          title: "deck.yaml"
+        - id: "B"
+          title: "Zod スキーマ"
+        - id: "C"
+          title: "テーマパターン"
+        - id: "D"
+          title: "HTML 出力"
+      explanations:
+        - id: "A"
+          title: "deck.yaml"
+          items:
+            - "YAML でスライド内容を構造化"
+            - "Git で差分管理・レビュー"
+        - id: "B"
+          title: "Zod スキーマ"
+          items:
+            - "パターンごとに vars の型を定義"
+            - "タイポ・型ミスをビルド前に検出"
+        - id: "C"
+          title: "テーマパターン"
+          items:
+            - "再利用可能な .tsx レイアウト"
+            - "デザイントークンで一貫性を保証"
+        - id: "D"
+          title: "HTML 出力"
+          items:
+            - "スタンドアロンなファイル"
+            - "外部依存ゼロで共有可能"
+      footer: "YAML を書くだけで、デザイン品質の高いプレゼンが完成する"
+
+  # 8. 料金
+  - file: pricing-tiers
+    vars:
+      heading: "シンプルなライセンス"
+      plans:
+        - name: "OSS"
+          price: "Free"
+          description: "Apache-2.0。個人・商用問わず無料。"
+          features:
+            - "DSL / Schema / Renderer / CLI"
+            - "全テーマ・全パターン"
+            - "デッキローカルパターン"
+            - "esbuild オンザフライコンパイル"
+        - name: "Pro"
+          price: "Contact"
+          description: "チーム向け承認ワークフロー。"
+          highlighted: true
+          features:
+            - "OSS の全機能"
+            - "承認フロー（generated → approved → locked）"
+            - "チーム管理・ブランド制約"
+            - "テンプレート資産管理"
+            - "導入支援・カスタムテーマ制作"
+
+  # 9. クロージング
+  - file: thank-you
+    vars:
+      headline: "始めよう。"
+      body: "pnpm install して、deck.yaml を書くだけ。"
+      cta: "GitHub で始める"
+      link: "github.com/hayaoo/deckspec"

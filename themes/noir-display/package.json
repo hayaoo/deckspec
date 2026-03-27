@@ -1,0 +1,38 @@
+{
+  "name": "@deckspec/theme-noir-display",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/patterns/index.js",
+  "types": "./dist/patterns/index.d.ts",
+  "exports": {
+    ".": "./dist/patterns/index.js",
+    "./components": "./dist/components/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.0",
+    "lucide-react": "^0.469.0",
+    "recharts": "^2.15.0",
+    "zod": "^3.23.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hayaoo/deckspec",
+    "directory": "themes/noir-display"
+  },
+  "homepage": "https://github.com/hayaoo/deckspec",
+  "bugs": {
+    "url": "https://github.com/hayaoo/deckspec/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

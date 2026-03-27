@@ -1,0 +1,37 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+*.log
+*.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Output / temp
+output/
+tmp/
+.deckspec-cache/
+
+# Agent caches
+.agent/
+.agents/
+.claude/
+.playwright-mcp/

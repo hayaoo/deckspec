@@ -1,0 +1,263 @@
+/* Pristine Display — Global Styles
+   Apple.com inspired light presentation theme
+   Canvas gray (#f5f5f7) base, white cards, near-black text */
+
+/* ── CSS Custom Properties ── */
+:root {
+  --color-background: #f5f5f7;
+  --color-foreground: #1d1d1f;
+  --color-primary: #0071e3;
+  --color-muted: #e8e8ed;
+  --color-muted-foreground: #6e6e73;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-accent: #0066cc;
+  --color-card-background: #ffffff;
+
+  --font-heading: 'SF Pro JP', 'SF Pro Display', 'Hiragino Sans', 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+  --font-body: 'SF Pro JP', 'SF Pro Text', 'Hiragino Sans', 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+
+  --spacing-slide-padding: 60px;
+  --spacing-slide-padding-x: 80px;
+  --spacing-gap: 32px;
+  --spacing-gap-sm: 16px;
+  --spacing-gap-md: 24px;
+  --spacing-gap-lg: 48px;
+
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 980px;
+
+  --tracking-display: -0.015em;
+  --tracking-heading: -0.009em;
+  --tracking-body: -0.022em;
+  --tracking-caption: -0.016em;
+
+  --slide-width: 1200px;
+  --slide-height: 675px;
+}
+
+/* ── Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ── */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.0625;
+  letter-spacing: var(--tracking-display);
+  color: var(--color-foreground);
+}
+
+h2 {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-foreground);
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: 0.007em;
+  color: var(--color-foreground);
+}
+
+h4 {
+  font-family: var(--font-heading);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: 0.011em;
+  color: var(--color-foreground);
+}
+
+p {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: var(--tracking-body);
+  color: var(--color-foreground);
+}
+
+/* ── Slide Containers ── */
+.slide {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background: var(--color-background);
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-pad {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background: var(--color-background);
+  padding: var(--spacing-slide-padding) var(--spacing-slide-padding-x);
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-stack {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background: var(--color-background);
+  padding: var(--spacing-slide-padding) var(--spacing-slide-padding-x);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-center {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── White background variant ── */
+.slide-white {
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background: var(--color-card-background);
+  padding: var(--spacing-slide-padding) var(--spacing-slide-padding-x);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Grid Layouts ── */
+.slide-grid-equal-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-gap);
+}
+
+.slide-grid-equal-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-gap);
+}
+
+.slide-grid-equal-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-gap);
+}
+
+.slide-grid-main-sub {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-gap);
+}
+
+/* ── Stack ── */
+.stack-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--color-card-background);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.card-highlight {
+  background: var(--color-card-background);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 2px 4px 16px rgba(0, 0, 0, 0.08);
+  border: 2px solid var(--color-primary);
+}
+
+/* ── Text Utilities ── */
+.text-muted {
+  color: var(--color-muted-foreground);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-description {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-muted-foreground);
+}
+
+/* ── List ── */
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-gap-sm);
+}
+
+/* ── Pill Button ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-caption);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.pill-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-caption);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+}
+
+/* ── Divider ── */
+.divider-h {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+}
