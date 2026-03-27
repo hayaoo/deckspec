@@ -1,6 +1,7 @@
 {
   "name": "@deckspec/theme-noir-display",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "files": ["dist", "components", "patterns", "globals.css", "tokens.json", "design.md"],
   "type": "module",
   "main": "./dist/patterns/index.js",
   "types": "./dist/patterns/index.d.ts",
