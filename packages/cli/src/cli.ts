@@ -6,11 +6,13 @@ import { approveCommand } from "./commands/approve.js";
 import { lockCommand } from "./commands/lock.js";
 import { patternsCommand } from "./commands/patterns.js";
 import { devCommand } from "./commands/dev.js";
+import { initCommand } from "./commands/init.js";
 
 const USAGE = `
 Usage: deckspec <command> [options]
 
 Commands:
+  init [dir] [--theme <name>]  Scaffold a new DeckSpec project
   validate <file>           Validate a deck YAML file
   render <file> -o <output> Render a deck YAML file to HTML
   approve <file> [options]  Approve/reject slides or archive/activate decks
@@ -105,6 +107,11 @@ async function main(): Promise<void> {
     case "dev": {
       const dir = args[1] || process.cwd();
       await devCommand(dir);
+      break;
+    }
+
+    case "init": {
+      await initCommand(args.slice(1));
       break;
     }
 
