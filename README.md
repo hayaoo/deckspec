@@ -137,7 +137,22 @@ DeckSpec is designed to be used by AI agents (Claude Code, etc.):
 3. Human previews with `deckspec dev` and approves slides
 4. Approved patterns are locked and reused across decks
 
-The `deckspec init` command generates a `CLAUDE.md` with YAML DSL spec, pattern catalog, and usage instructions — giving AI agents full context to create decks.
+### What `deckspec init` generates
+
+`deckspec init` scaffolds everything an AI agent needs:
+
+- **`CLAUDE.md`** — YAML DSL spec, pattern catalog, CLI usage
+- **`.claude/skills/`** — 5 ready-to-use Claude Code skills:
+
+| Skill | Trigger | What it does |
+|-------|---------|-------------|
+| `deckspec-make-slides` | "make slides", "create presentation" | End-to-end deck creation: YAML authoring → validate → render → preview |
+| `deckspec-add-pattern` | "add pattern", "new layout" | Guided creation of reusable theme patterns |
+| `deckspec-screenshot` | "screenshot", "capture slides" | Export slides as PNG images via Playwright |
+| `deckspec-to-pptx` | "PowerPoint", "pptx" | Convert deck.yaml to .pptx via pptxgenjs |
+| `deckspec-promote-pattern` | "promote pattern", "elevate to theme" | Interactive promotion of deck-local patterns to theme patterns |
+
+Just run `deckspec init`, open Claude Code, and say "make slides about X" — the AI knows the DSL, the available patterns, and the full workflow.
 
 ## Technology Stack
 
