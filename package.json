@@ -23,9 +23,12 @@
     "render": "node packages/cli/dist/cli.js render",
     "dev": "node packages/cli/dist/cli.js dev .",
     "patterns": "node packages/cli/dist/cli.js patterns",
-    "preview": "./scripts/preview.sh"
+    "preview": "./scripts/preview.sh",
+    "changeset": "changeset"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "playwright": "^1.58.2",
