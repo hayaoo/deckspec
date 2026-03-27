@@ -266,6 +266,19 @@ export async function initCommand(args: string[]): Promise<void> {
   await writeFile(gitignorePath, generateGitignore());
   console.log("  Created .gitignore");
 
+  // 6. Copy skills to .claude/skills/
+  const skillsSrc = join(templatesDir, "skills");
+  try {
+    const s2 = await stat(skillsSrc);
+    if (s2.isDirectory()) {
+      const skillsDest = join(root, ".claude", "skills");
+      console.log("  Copying skills to .claude/skills/");
+      await copyDirRecursive(skillsSrc, skillsDest);
+    }
+  } catch {
+    // skills template directory not found — skip silently
+  }
+
   console.log("");
   console.log("Done! Next steps:");
   console.log("");
