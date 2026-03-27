@@ -51,8 +51,9 @@ export interface ResolvedSlideFile {
  * Resolution priority (ADR-022):
  * 1. Deck-local pattern: {basePath}/patterns/{name}/index.tsx
  * 2. Deck-local pattern: {basePath}/patterns/{name}/index.js
- * 3. Theme pattern:      {patternsDir}/{name}/index.js
- * 4. Theme pattern:      {patternsDir}/{name}.js
+ * 3. Theme pattern:      {patternsDir}/{name}/index.js (compiled)
+ * 4. Theme pattern:      {patternsDir}/{name}.js (compiled, flat)
+ * 5. Theme pattern:      {patternsSrcDir}/{name}/index.tsx (source, on-the-fly compile)
  *
  * Files with extensions (.html etc) are resolved relative to basePath as passthrough.
  */
@@ -60,6 +61,7 @@ export async function resolveSlideFile(
   file: string,
   basePath: string,
   patternsDir: string,
+  patternsSrcDir?: string,
 ): Promise<ResolvedSlideFile> {
   const ext = extname(file);
 
@@ -100,9 +102,22 @@ export async function resolveSlideFile(
       await access(flatPath);
       return { type: "pattern", path: flatPath };
     } catch {
-      throw new Error(
-        `Pattern "${file}" not found. Looked in:\n  ${localTsxPath}\n  ${localJsPath}\n  ${dirIndexPath}\n  ${flatPath}`,
-      );
+      // continue
     }
   }
+
+  // 5. Theme source: patternsSrcDir/{name}/index.tsx (on-the-fly compile)
+  if (patternsSrcDir) {
+    const themeTsxPath = resolve(patternsSrcDir, file, "index.tsx");
+    try {
+      await access(themeTsxPath);
+      return { type: "pattern", path: themeTsxPath, tsx: true };
+    } catch {
+      // continue
+    }
+  }
+
+  throw new Error(
+    `Pattern "${file}" not found. Looked in:\n  ${localTsxPath}\n  ${localJsPath}\n  ${resolve(patternsDir, file, "index.js")}\n  ${resolve(patternsDir, `${file}.js`)}${patternsSrcDir ? `\n  ${resolve(patternsSrcDir, file, "index.tsx")}` : ""}`,
+  );
 }

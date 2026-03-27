@@ -27,6 +27,7 @@ export async function renderSlide(
     slide.file,
     context.basePath,
     context.patternsDir,
+    context.patternsSrcDir,
   );
 
   if (resolved.type === "html") {
