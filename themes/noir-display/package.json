@@ -1,6 +1,6 @@
 {
   "name": "@deckspec/theme-noir-display",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "files": [
     "dist",
     "components",

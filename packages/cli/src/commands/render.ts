@@ -17,8 +17,10 @@ export async function renderCommand(
   const themeName = extractThemeName(raw);
   const patternsDir = resolveThemePatternsDir(themeName);
 
+  const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
+
   // Validate first
-  const result = await validateDeck(raw, { basePath, patternsDir, compileTsx: compileTsxCached });
+  const result = await validateDeck(raw, { basePath, patternsDir, patternsSrcDir, compileTsx: compileTsxCached });
 
   if (result.deckError) {
     console.error("\u2717 Deck structure is invalid:");
@@ -42,7 +44,6 @@ export async function renderCommand(
 
   const deck = raw as Deck;
   const themeCSS = await loadThemeCSS(deck.meta.theme);
-  const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
   const html = await renderDeck(deck, themeCSS, { basePath, patternsDir, patternsSrcDir });
 
   // If outputPath has no .html extension, treat it as a directory

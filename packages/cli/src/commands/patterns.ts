@@ -1,6 +1,6 @@
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readdir, readFile, stat, access } from "node:fs/promises";
 import { join } from "node:path";
-import { resolveThemePatternsDir, resolveThemePatternsSrcDir } from "@deckspec/renderer";
+import { resolveThemePatternsDir, resolveThemePatternsSrcDir, compileTsxCached } from "@deckspec/renderer";
 import yaml from "js-yaml";
 
 /**
@@ -23,9 +23,26 @@ export async function patternsCommand(args: string[]): Promise<void> {
   const patternsDir = resolveThemePatternsDir(themeName);
   const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
 
+  // Try dist/patterns/ first, fall back to patterns/ (source)
+  let scanDir: string;
+  let usingSrc = false;
+  try {
+    await access(patternsDir);
+    scanDir = patternsDir;
+  } catch {
+    try {
+      await access(patternsSrcDir);
+      scanDir = patternsSrcDir;
+      usingSrc = true;
+    } catch {
+      console.log(`No patterns found for theme "${themeName}".`);
+      return;
+    }
+  }
+
   let entries: string[];
   try {
-    entries = await readdir(patternsDir);
+    entries = await readdir(scanDir);
   } catch {
     console.log(`No patterns found for theme "${themeName}".`);
     return;
@@ -36,7 +53,7 @@ export async function patternsCommand(args: string[]): Promise<void> {
   for (const name of entries) {
     if (name.startsWith(".") || name.startsWith("_") || name === "node_modules" || name === "dist") continue;
     try {
-      const s = await stat(join(patternsDir, name));
+      const s = await stat(join(scanDir, name));
       if (s.isDirectory()) patternNames.push(name);
     } catch {
       // skip
@@ -52,9 +69,17 @@ export async function patternsCommand(args: string[]): Promise<void> {
   console.log(`Available patterns (theme: ${themeName}):\n`);
 
   for (const name of patternNames) {
-    const indexPath = join(patternsDir, name, "index.js");
     try {
-      const mod = await import(indexPath);
+      let mod: any;
+      if (usingSrc) {
+        // Compile .tsx on-the-fly
+        const tsxPath = join(patternsSrcDir, name, "index.tsx");
+        const compiled = await compileTsxCached(tsxPath);
+        mod = await import(compiled);
+      } else {
+        const indexPath = join(patternsDir, name, "index.js");
+        mod = await import(indexPath);
+      }
 
       // Check for examples.yaml
       let hasExamples = false;
@@ -92,7 +117,7 @@ export async function patternsCommand(args: string[]): Promise<void> {
         }
       }
     } catch {
-      console.log(`  ${name}: (not compiled — run pnpm build)`);
+      console.log(`  ${name}: (failed to load)`);
     }
     console.log();
   }

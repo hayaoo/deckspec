@@ -39,7 +39,7 @@ export async function renderDeck(
           seenPatterns.add(patternName);
           try {
             // Resolve to find the actual pattern location (deck-local or theme)
-            const resolved = await resolveSlideFile(patternName, context.basePath, context.patternsDir);
+            const resolved = await resolveSlideFile(patternName, context.basePath, context.patternsDir, context.patternsSrcDir);
             let cssPath: string;
             if (resolved.tsx || resolved.path.includes("/patterns/")) {
               // Deck-local or theme source — style.css is next to the pattern source
