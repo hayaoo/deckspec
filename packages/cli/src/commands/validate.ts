@@ -1,6 +1,6 @@
 import { resolve, dirname } from "node:path";
 import { loadDeckFile, validateDeck } from "@deckspec/dsl";
-import { extractThemeName, resolveThemePatternsDir, compileTsxCached } from "@deckspec/renderer";
+import { extractThemeName, resolveThemePatternsDir, resolveThemePatternsSrcDir, compileTsxCached } from "@deckspec/renderer";
 
 /**
  * Validates a deck YAML file.
@@ -11,8 +11,9 @@ export async function validateCommand(filePath: string): Promise<void> {
   const basePath = dirname(resolve(filePath));
   const themeName = extractThemeName(raw);
   const patternsDir = resolveThemePatternsDir(themeName);
+  const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
 
-  const result = await validateDeck(raw, { basePath, patternsDir, compileTsx: compileTsxCached });
+  const result = await validateDeck(raw, { basePath, patternsDir, patternsSrcDir, compileTsx: compileTsxCached });
 
   if (result.deckError) {
     console.error("\u2717 Deck structure is invalid:");

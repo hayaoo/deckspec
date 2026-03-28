@@ -7,6 +7,8 @@ import { resolveSlideFile } from "./parser.js";
 export interface ValidationContext {
   basePath: string;
   patternsDir: string;
+  /** Source patterns directory for .tsx fallback (e.g. themes/{theme}/patterns/) */
+  patternsSrcDir?: string;
   /** Optional function to compile .tsx files on-the-fly. Provided by renderer. */
   compileTsx?: (tsxPath: string) => Promise<string>;
 }
@@ -52,6 +54,7 @@ export async function validateDeck(
         slide.file,
         context.basePath,
         context.patternsDir,
+        context.patternsSrcDir,
       );
 
       if (resolved.type === "html") {
