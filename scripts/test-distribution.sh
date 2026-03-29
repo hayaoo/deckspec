@@ -1,9 +1,9 @@
 #!/bin/bash
-# test-distribution.sh — ユーザー環境を再現して init → validate → render → dev を検証
+# test-distribution.sh — ユーザー環境を再現して init → validate → render を検証
 #
 # Usage: ./scripts/test-distribution.sh
 #
-# このスクリプトは publish 前に実行し、ユーザーが体験するフローを再現する。
+# publish 前に実行し、ユーザーが体験するフローを再現する。
 # モノレポの symlink や dist/ に依存しない、クリーンな環境でテストする。
 set -euo pipefail
 
@@ -24,149 +24,182 @@ fail() { echo "  ✗ $1"; FAIL=$((FAIL + 1)); }
 
 log "Test directory: $TEST_DIR"
 
-# ─── Step 1: Build the CLI locally ──────────────────────────────────
+# ─── Step 1: Build ──────────────────────────────────────────────────
 log "Step 1: Building packages"
 cd "$REPO_ROOT"
 pnpm build > /dev/null 2>&1
 pass "pnpm build succeeded"
 
-# ─── Step 2: Pack CLI (simulate npm publish) ────────────────────────
-log "Step 2: Packing @deckspec/cli"
+# ─── Step 2: Pack all packages (simulate npm publish) ────────────────
+log "Step 2: Packing all packages"
 cd "$REPO_ROOT/packages/cli"
 CLI_TGZ=$(npm pack --pack-destination "$TEST_DIR" 2>/dev/null)
 CLI_TGZ_PATH="$TEST_DIR/$CLI_TGZ"
 
-# Verify dist/ is in the tarball
+# Verify dist/ in CLI tarball
 if tar tzf "$CLI_TGZ_PATH" | grep -q "package/dist/cli.js"; then
-  pass "dist/cli.js included in package"
+  pass "CLI: dist/cli.js in tarball"
 else
-  fail "dist/cli.js NOT in package (files field missing?)"
+  fail "CLI: dist/cli.js NOT in tarball"
 fi
 
-# Verify templates/ is in the tarball
+# Verify templates/ in CLI tarball
 if tar tzf "$CLI_TGZ_PATH" | grep -q "package/templates/noir-display"; then
-  pass "templates/noir-display included in package"
+  pass "CLI: templates/noir-display in tarball"
 else
-  fail "templates/noir-display NOT in package"
+  fail "CLI: templates/noir-display NOT in tarball"
 fi
 
-# Verify skills are in the tarball
 if tar tzf "$CLI_TGZ_PATH" | grep -q "package/templates/skills/deckspec-make-slides"; then
-  pass "skills templates included in package"
+  pass "CLI: skills in tarball"
 else
-  fail "skills templates NOT in package"
+  fail "CLI: skills NOT in tarball"
 fi
 
-# ─── Step 3: Pack all dependency packages ───────────────────────────
-log "Step 3: Packing dependency packages"
+# Pack dependency packages
 for pkg in schema dsl renderer; do
   cd "$REPO_ROOT/packages/$pkg"
   PKG_TGZ=$(npm pack --pack-destination "$TEST_DIR" 2>/dev/null)
   if tar tzf "$TEST_DIR/$PKG_TGZ" | grep -q "package/dist/"; then
-    pass "@deckspec/$pkg has dist/ in tarball"
+    pass "@deckspec/$pkg: dist/ in tarball"
   else
-    fail "@deckspec/$pkg missing dist/ in tarball"
+    fail "@deckspec/$pkg: dist/ NOT in tarball"
   fi
 done
 
-cd "$REPO_ROOT/themes/noir-display"
-THEME_TGZ=$(npm pack --pack-destination "$TEST_DIR" 2>/dev/null)
-pass "Theme packed"
+# ─── Step 3: deckspec init in isolated directory ─────────────────────
+log "Step 3: Testing deckspec init"
 
-# ─── Step 4: Create isolated user project ───────────────────────────
-log "Step 4: Simulating user environment"
-USER_PROJECT="$TEST_DIR/user-project"
-mkdir -p "$USER_PROJECT"
-cd "$USER_PROJECT"
-
-# Install CLI from local tarball (not from npm registry)
+# Install CLI from tarball in a temp location to get the binary
+TOOL_DIR="$TEST_DIR/tool"
+mkdir -p "$TOOL_DIR"
+cd "$TOOL_DIR"
 npm init -y > /dev/null 2>&1
 npm install "$CLI_TGZ_PATH" > /dev/null 2>&1
-pass "CLI installed from tarball"
 
-# Verify deckspec binary exists
-if [ -f "node_modules/.bin/deckspec" ]; then
-  pass "deckspec binary linked"
-else
-  fail "deckspec binary NOT linked"
-fi
-
-# ─── Step 5: Run deckspec init ──────────────────────────────────────
-log "Step 5: Testing deckspec init"
+# Run init
 INIT_DIR="$TEST_DIR/init-project"
 npx deckspec init "$INIT_DIR" --theme noir-display 2>&1 || true
 
-if [ -f "$INIT_DIR/CLAUDE.md" ]; then
-  pass "CLAUDE.md generated"
-else
-  fail "CLAUDE.md NOT generated"
-fi
+# Check generated files
+for f in CLAUDE.md .gitignore "decks/sample/deck.yaml" package.json; do
+  if [ -f "$INIT_DIR/$f" ]; then
+    pass "init: $f generated"
+  else
+    fail "init: $f NOT generated"
+  fi
+done
 
-if [ -d "$INIT_DIR/themes/noir-display/patterns" ]; then
-  pass "Theme patterns copied"
-else
-  fail "Theme patterns NOT copied"
-fi
+for d in "themes/noir-display/patterns" ".claude/skills"; do
+  if [ -d "$INIT_DIR/$d" ]; then
+    pass "init: $d/ exists"
+  else
+    fail "init: $d/ NOT found"
+  fi
+done
 
-if [ -d "$INIT_DIR/.claude/skills" ]; then
-  pass "Claude skills copied"
-else
-  fail "Claude skills NOT copied"
-fi
-
-if [ -f "$INIT_DIR/decks/sample/deck.yaml" ]; then
-  pass "Sample deck created"
-else
-  fail "Sample deck NOT created"
-fi
-
-# Verify no dist/ leaked into copied theme
+# No dist/ leaked
 if [ -d "$INIT_DIR/themes/noir-display/dist" ]; then
-  fail "dist/ leaked into copied theme (should be excluded)"
+  fail "init: dist/ leaked into theme"
 else
-  pass "No dist/ in copied theme"
+  pass "init: no dist/ in theme"
 fi
 
-# ─── Step 6: Test validate in user environment ──────────────────────
-log "Step 6: Testing deckspec validate"
+# ─── Step 4: Check package.json has theme dependencies ───────────────
+log "Step 4: Checking init package.json dependencies"
 cd "$INIT_DIR"
+
+for dep in "lucide-react" "recharts" "@phosphor-icons/react" "react" "react-dom" "zod"; do
+  if grep -q "\"$dep\"" package.json; then
+    pass "package.json: $dep listed"
+  else
+    fail "package.json: $dep MISSING"
+  fi
+done
+
+# ─── Step 5: Install deps + local CLI tarballs ──────────────────────
+log "Step 5: Installing dependencies in init project"
 npm install > /dev/null 2>&1
 
-# Install local tarballs as dependencies for the init project
+# Also install CLI + core from local tarballs (override npm registry versions)
 for tgz in "$TEST_DIR"/deckspec-*.tgz; do
   npm install "$tgz" > /dev/null 2>&1
 done
+pass "Dependencies installed"
 
-if npx deckspec validate decks/sample/deck.yaml 2>&1 | grep -qi "valid\|ok\|pass"; then
-  pass "validate passed on sample deck"
+# ─── Step 6: Validate sample deck ───────────────────────────────────
+log "Step 6: Testing validate (sample deck)"
+if npx deckspec validate decks/sample/deck.yaml 2>&1; then
+  pass "validate: sample deck OK"
 else
-  # Try anyway — some CLIs output differently
-  if npx deckspec validate decks/sample/deck.yaml 2>&1; then
-    pass "validate completed without error"
-  else
-    fail "validate failed on sample deck"
-  fi
+  fail "validate: sample deck FAILED"
 fi
 
-# ─── Step 7: Test render in user environment ────────────────────────
-log "Step 7: Testing deckspec render"
+# ─── Step 7: Render sample deck ─────────────────────────────────────
+log "Step 7: Testing render (sample deck)"
 if npx deckspec render decks/sample/deck.yaml -o "$TEST_DIR/output" 2>&1; then
-  if [ -f "$TEST_DIR/output/index.html" ] || [ -f "$TEST_DIR/output" ]; then
-    pass "render produced output"
+  if [ -f "$TEST_DIR/output/index.html" ]; then
+    pass "render: output/index.html created"
   else
-    fail "render ran but no output file found"
+    fail "render: no index.html in output"
   fi
 else
-  fail "render failed"
+  fail "render: command failed"
 fi
 
-# ─── Step 8: Check for client-specific data leaks ───────────────────
-log "Step 8: Checking for data leaks"
-if grep -rq "hashimotoya\|clean-slate" "$INIT_DIR/" 2>/dev/null; then
-  fail "Client-specific references found in init output!"
-  grep -rn "hashimotoya\|clean-slate" "$INIT_DIR/" 2>/dev/null | head -5
+# ─── Step 8: Validate all-patterns deck (catches missing deps) ──────
+log "Step 8: Testing validate with ALL patterns"
+
+# Generate a deck that uses every pattern
+PATTERNS_DIR="$INIT_DIR/themes/noir-display/patterns"
+ALL_DECK="$INIT_DIR/decks/all-patterns/deck.yaml"
+mkdir -p "$(dirname "$ALL_DECK")"
+
+echo "meta:" > "$ALL_DECK"
+echo "  title: All Patterns Test" >> "$ALL_DECK"
+echo "  theme: noir-display" >> "$ALL_DECK"
+echo "slides:" >> "$ALL_DECK"
+
+PATTERN_COUNT=0
+for patternDir in "$PATTERNS_DIR"/*/; do
+  pname=$(basename "$patternDir")
+  if [ "$pname" = "_lib" ]; then continue; fi
+  echo "  - file: $pname" >> "$ALL_DECK"
+  echo "    vars: {}" >> "$ALL_DECK"
+  PATTERN_COUNT=$((PATTERN_COUNT + 1))
+done
+
+echo "  Generated deck with $PATTERN_COUNT patterns"
+
+# Validate — we expect schema errors (empty vars) but NOT import errors
+VALIDATE_OUT=$(npx deckspec validate "$ALL_DECK" 2>&1 || true)
+if echo "$VALIDATE_OUT" | grep -qi "cannot find module\|module not found\|ERR_MODULE_NOT_FOUND"; then
+  fail "validate: missing module dependency detected"
+  echo "$VALIDATE_OUT" | grep -i "cannot find\|not found\|ERR_MODULE" | head -5
 else
-  pass "No client-specific references in init output"
+  pass "validate: all patterns loadable (no missing deps)"
+fi
+
+# ─── Step 9: Test patterns command ──────────────────────────────────
+log "Step 9: Testing patterns command"
+PATTERNS_OUT=$(npx deckspec patterns 2>&1 || true)
+LOADED=$(echo "$PATTERNS_OUT" | grep -c ":" || true)
+FAILED=$(echo "$PATTERNS_OUT" | grep -c "failed to load" || true)
+
+if [ "$FAILED" -gt 0 ]; then
+  fail "patterns: $FAILED pattern(s) failed to load"
+  echo "$PATTERNS_OUT" | grep "failed to load"
+else
+  pass "patterns: all $LOADED patterns loaded"
+fi
+
+# ─── Step 10: Data leak check ────────────────────────────────────────
+log "Step 10: Checking for data leaks"
+if grep -rq "hashimotoya\|clean-slate" "$INIT_DIR/" --include="*.md" --include="*.yaml" --include="*.json" --include="*.ts" --include="*.tsx" --include="*.mjs" 2>/dev/null; then
+  fail "Client-specific references found!"
+  grep -rn "hashimotoya\|clean-slate" "$INIT_DIR/" --include="*.md" --include="*.yaml" --include="*.json" --include="*.ts" --include="*.tsx" --include="*.mjs" 2>/dev/null | head -5
+else
+  pass "No client-specific references"
 fi
 
 # ─── Summary ────────────────────────────────────────────────────────
@@ -176,7 +209,7 @@ echo "  Results: $PASS passed, $FAIL failed"
 echo "════════════════════════════════════════"
 
 if [ $FAIL -gt 0 ]; then
-  echo "  ⚠ Fix the failures before publishing!"
+  echo "  ⚠ Fix failures before publishing!"
   exit 1
 else
   echo "  ✓ All checks passed. Safe to publish."

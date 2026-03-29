@@ -108,6 +108,12 @@ function generatePackageJson(): string {
       type: "module",
       dependencies: {
         "@deckspec/cli": "^0.1.0",
+        "@phosphor-icons/react": "^2.1.0",
+        "lucide-react": "^0.469.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "recharts": "^2.15.0",
+        "zod": "^3.23.0",
       },
     },
     null,
