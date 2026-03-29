@@ -33,8 +33,7 @@ pass "pnpm build succeeded"
 # ─── Step 2: Pack all packages (simulate npm publish) ────────────────
 log "Step 2: Packing all packages"
 cd "$REPO_ROOT/packages/cli"
-CLI_TGZ=$(npm pack --pack-destination "$TEST_DIR" 2>/dev/null)
-CLI_TGZ_PATH="$TEST_DIR/$CLI_TGZ"
+CLI_TGZ_PATH=$(pnpm pack --pack-destination "$TEST_DIR" 2>/dev/null | tail -1)
 
 # Verify dist/ in CLI tarball
 if tar tzf "$CLI_TGZ_PATH" | grep -q "package/dist/cli.js"; then
@@ -59,8 +58,8 @@ fi
 # Pack dependency packages
 for pkg in schema dsl renderer; do
   cd "$REPO_ROOT/packages/$pkg"
-  PKG_TGZ=$(npm pack --pack-destination "$TEST_DIR" 2>/dev/null)
-  if tar tzf "$TEST_DIR/$PKG_TGZ" | grep -q "package/dist/"; then
+  PKG_TGZ_PATH=$(pnpm pack --pack-destination "$TEST_DIR" 2>/dev/null | tail -1)
+  if tar tzf "$PKG_TGZ_PATH" | grep -q "package/dist/"; then
     pass "@deckspec/$pkg: dist/ in tarball"
   else
     fail "@deckspec/$pkg: dist/ NOT in tarball"
@@ -75,7 +74,12 @@ TOOL_DIR="$TEST_DIR/tool"
 mkdir -p "$TOOL_DIR"
 cd "$TOOL_DIR"
 npm init -y > /dev/null 2>&1
-npm install "$CLI_TGZ_PATH" > /dev/null 2>&1
+if ! npm install "$CLI_TGZ_PATH" > /dev/null 2>&1; then
+  fail "CLI tarball install failed"
+  npm install "$CLI_TGZ_PATH" 2>&1 | tail -10
+else
+  pass "CLI installed from tarball"
+fi
 
 # Run init
 INIT_DIR="$TEST_DIR/init-project"

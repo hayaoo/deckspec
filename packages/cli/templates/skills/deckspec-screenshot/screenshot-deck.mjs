@@ -4,8 +4,8 @@ import { resolve } from "node:path";
 import { mkdirSync } from "node:fs";
 
 const args = process.argv.slice(2);
-const htmlPath = resolve(args[0] ?? "output/hashimotoya-fuel.html");
-const outDir = resolve(args[1] ?? "output/hashimotoya-fuel-slides");
+const htmlPath = resolve(args[0] ?? "output/sample.html");
+const outDir = resolve(args[1] ?? "output/sample-slides");
 mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
