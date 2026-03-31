@@ -107,13 +107,28 @@ Create a test deck referencing the new pattern, validate it, and preview with `n
 
 ### Styling
 - Use semantic CSS classes (`.slide-pad`, `.card`, `.list`, etc.) defined in `globals.css`
-- Colors via CSS custom properties (`var(--color-primary)`) — **never hardcode hex values**
+- Colors via CSS custom properties with **fallback values**: `var(--color-primary, #0071e3)` — never hardcode hex without fallback
 - Follow `design.md` color palette and forbidden color rules strictly
 - Minimum font size: 16px
 - No serif fonts
 - No Tailwind CSS
-- No pure black (`#000000`) for text — use `var(--color-foreground)`
-- No pure white (`#ffffff`) for backgrounds — use `var(--color-background)`
+- No pure black (`#000000`) for text — use `var(--color-foreground, #1d1d1f)`
+- No pure white (`#ffffff`) for backgrounds — use `var(--color-background, #f5f5f7)`
+
+### Text with Line Breaks
+- YAML strings use `\n` for line breaks: `"Line 1\nLine 2"`
+- In the component, split and render with `<br />`:
+  ```tsx
+  {text.split("\\n").map((line, i) => (
+    <span key={i}>{i > 0 && <br />}{line}</span>
+  ))}
+  ```
+- Document `\n` support in the schema `.describe()`: `z.string().describe("Headline (supports \\n for line breaks)")`
+
+### Auto-Injected Props
+- `_slideIndex` (0-based) and `_slideTotal` are auto-injected by DeckSpec at render time
+- Patterns can use these for page numbers without requiring them in vars/schema
+- Access via props: `props._slideIndex + 1` for human-readable page number
 
 ### Schema
 - Export both `schema` (Zod) and `default` (React component)

@@ -65,7 +65,7 @@ export async function renderDeck(
     let html: string;
 
     if (context) {
-      html = await renderSlide(slide, context);
+      html = await renderSlide(slide, { ...context, slideIndex: index, slideTotal: total });
     } else {
       // Fallback: no context, can't resolve files
       html = `<div class="slide slide-center"><p>Cannot render: no context</p></div>`;

@@ -62,7 +62,7 @@ async function renderDeckByPath(
 
   const deck = raw as Deck;
   const themeCSS = await loadThemeCSS(deck.meta.theme);
-  return renderDeck(deck, themeCSS, { basePath, patternsDir, patternsSrcDir });
+  return renderDeck(deck, themeCSS, { basePath, patternsDir, patternsSrcDir, bustCache: true });
 }
 
 async function handleRequest(
@@ -110,13 +110,13 @@ async function handleRequest(
             } catch { /* no patterns dir */ }
             themes.push({
               name: dir,
-              displayName: tokens.displayName,
+              displayName: tokens.displayName ?? dir,
               patternCount,
               colors: [
-                { name: "foreground", hex: tokens.colors.foreground },
-                { name: "primary", hex: tokens.colors.primary },
-                { name: "background", hex: tokens.colors.background },
-                { name: "card", hex: tokens.colors["card-background"] ?? tokens.colors.background },
+                { name: "foreground", hex: tokens.colors?.foreground ?? "#000000" },
+                { name: "primary", hex: tokens.colors?.primary ?? "#0071e3" },
+                { name: "background", hex: tokens.colors?.background ?? "#ffffff" },
+                { name: "card", hex: tokens.colors?.["card-background"] ?? tokens.colors?.background ?? "#ffffff" },
               ],
             });
           } catch { /* skip invalid theme */ }
@@ -330,9 +330,13 @@ export async function devCommand(dir: string, options?: { port?: number }): Prom
     );
     fsWatcher.on("change", (filePath: string) => {
       console.log("[dev] File changed, reloading...");
-      // Clear compile cache for .tsx files so they get recompiled
       if (filePath.endsWith(".tsx")) {
-        clearCompileCache(filePath).catch(() => {});
+        // Theme changes may affect shared _lib/ — clear all compiled cache
+        if (filePath.includes("/themes/")) {
+          clearCompileCache().catch(() => {});
+        } else {
+          clearCompileCache(filePath).catch(() => {});
+        }
       }
       sendSSE("reload");
     });

@@ -42,7 +42,6 @@ export async function compileTsx(tsxPath: string): Promise<string> {
       "react/jsx-runtime",
       "lucide-react",
       "@phosphor-icons/react",
-      "recharts",
     ],
     // Allow resolving theme _lib and other deps from the source directory
     nodePaths: [

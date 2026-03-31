@@ -113,7 +113,7 @@ fi
 log "Step 4: Checking init package.json dependencies"
 cd "$INIT_DIR"
 
-for dep in "lucide-react" "recharts" "@phosphor-icons/react" "react" "react-dom" "zod"; do
+for dep in "lucide-react" "@phosphor-icons/react" "react" "react-dom" "zod"; do
   if grep -q "\"$dep\"" package.json; then
     pass "package.json: $dep listed"
   else

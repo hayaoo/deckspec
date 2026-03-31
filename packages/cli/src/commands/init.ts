@@ -113,7 +113,6 @@ function generatePackageJson(): string {
         "lucide-react": "^0.469.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "recharts": "^2.15.0",
         "zod": "^3.23.0",
       },
     },
@@ -238,10 +237,29 @@ If no existing pattern fits, create a custom one:
 **Important**: All slides are fixed at 1200×675px (16:9). Patterns must not overflow this area.
 See \`themes/${theme}/design.md\` for design constraints.
 
+## Tips
+
+### Line Breaks in YAML Text
+Use \`\\n\` in double-quoted strings for line breaks: \`"Line 1\\nLine 2"\`.
+Patterns that support this split on \`\\n\` and render \`<br />\` tags.
+
+### Auto-Injected Slide Metadata
+Every pattern receives \`_slideIndex\` (0-based) and \`_slideTotal\` automatically.
+Use \`props._slideIndex + 1\` for page numbers — no need to add \`page\` to vars manually.
+
+### CSS Variable Fallbacks
+Always include fallback values: \`var(--color-primary, #0071e3)\`.
+This ensures patterns render correctly even if theme CSS is not loaded.
+
 ## Theme Design Reference
 
 See \`themes/${theme}/design.md\` for the theme's design principles, color palette, typography rules, and forbidden colors.
 **AI agents must read design.md before creating or modifying patterns.**
+
+## Theme Compatibility Note
+
+Different themes define different sets of patterns. Switching a deck's theme may require updating pattern names.
+Run \`npx deckspec patterns --theme <name>\` to check available patterns in a theme.
 `;
 }
 

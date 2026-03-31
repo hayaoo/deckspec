@@ -77,5 +77,8 @@ Create a deck-local pattern at `decks/<deck-name>/patterns/<name>/index.tsx`:
 - Always validate before presenting to the user
 - Use pattern `examples.yaml` as reference for vars structure
 - Minimum font size: 16px, no serif fonts
-- Colors via CSS custom properties only — follow the theme's color palette
+- Colors via CSS custom properties with fallback values: `var(--color-primary, #0071e3)`
 - All slides must fit within the fixed 16:9 slide dimensions — no scrolling, no overflow
+- For multi-line text in YAML vars, use `\n`: `"Line 1\nLine 2"` (patterns split on `\n` to render `<br />`)
+- `_slideIndex` (0-based) and `_slideTotal` are auto-injected — patterns can use them for page numbers
+- Switching themes requires pattern name compatibility — use `npx deckspec patterns` to check available patterns

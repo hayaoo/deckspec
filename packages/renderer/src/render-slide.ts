@@ -10,6 +10,12 @@ export interface RenderSlideContext {
   basePath: string;
   patternsDir: string;
   patternsSrcDir?: string;
+  /** When true, bust Node.js ESM import cache for pre-compiled JS modules (used by dev server) */
+  bustCache?: boolean;
+  /** Auto-injected slide index (0-based) */
+  slideIndex?: number;
+  /** Auto-injected total slide count */
+  slideTotal?: number;
 }
 
 /**
@@ -40,11 +46,24 @@ export async function renderSlide(
     modulePath = await compileTsxCached(resolved.path);
   }
 
-  const mod = await import(modulePath);
+  // Bust Node.js ESM cache for pre-compiled JS by appending a query string
+  const importUrl = (!resolved.tsx && context.bustCache)
+    ? `${modulePath}?t=${Date.now()}`
+    : modulePath;
+  const mod = await import(importUrl);
+
   let vars = slide.vars ?? {};
   if (mod.assets && Array.isArray(mod.assets)) {
     vars = await resolveAssets(vars, mod.assets, context.basePath);
   }
   const validated = mod.schema ? mod.schema.parse(vars) : vars;
-  return renderToStaticMarkup(createElement(mod.default, validated));
+
+  // Inject slide metadata after validation (no schema change needed)
+  const propsWithMeta = {
+    ...validated,
+    _slideIndex: context.slideIndex ?? 0,
+    _slideTotal: context.slideTotal ?? 1,
+  };
+
+  return renderToStaticMarkup(createElement(mod.default, propsWithMeta));
 }
