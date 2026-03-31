@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm, readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { createHash } from "node:crypto";
 
@@ -16,12 +16,13 @@ function cacheDir(): string {
  * Compiles a .tsx file on-the-fly using esbuild and returns
  * the path to the compiled ESM module that can be dynamically imported.
  *
- * Used for deck-local patterns that are authored as .tsx but need
- * to be executable at runtime without a prior build step.
+ * Uses a content-based hash for the output path so that Node.js ESM
+ * import() cache is automatically busted when the source file changes.
  */
 export async function compileTsx(tsxPath: string): Promise<string> {
-  // Use a hash of the source path for a stable, unique output name
-  const hash = createHash("md5").update(tsxPath).digest("hex").slice(0, 12);
+  // Use content hash to bust Node.js ESM import() cache on file changes
+  const source = await readFile(tsxPath, "utf-8");
+  const hash = createHash("md5").update(source).digest("hex").slice(0, 12);
   const outDir = join(cacheDir(), hash);
   await mkdir(outDir, { recursive: true });
   const outFile = join(outDir, "index.mjs");
@@ -73,12 +74,16 @@ export async function compileTsxCached(tsxPath: string): Promise<string> {
 /**
  * Clears a specific entry or the entire compile cache.
  * Also removes the temporary compiled files.
+ *
+ * When clearing a specific file, the old compiled directory is removed
+ * so the next compileTsx() call produces a fresh content-hashed path
+ * that Node.js ESM import() treats as a new module.
  */
 export async function clearCompileCache(tsxPath?: string): Promise<void> {
   if (tsxPath) {
     const cached = compiledCache.get(tsxPath);
+    compiledCache.delete(tsxPath);
     if (cached) {
-      compiledCache.delete(tsxPath);
       try {
         await rm(dirname(cached), { recursive: true, force: true });
       } catch {

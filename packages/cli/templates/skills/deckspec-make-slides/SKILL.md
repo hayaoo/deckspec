@@ -14,9 +14,13 @@ Create a DeckSpec presentation from a user request.
 - How many slides?
 - What tone? (business, technical, casual)
 
-### 2. Check available patterns
+### 2. Check available patterns and design system
+
+**MANDATORY: Read the design system before creating any slides or patterns.**
+
 Run: `npx deckspec patterns --examples`
-Read: `themes/*/design.md` for design philosophy and pattern catalog.
+Read: `themes/<theme>/design.md` for design philosophy, color palette, forbidden colors, and pattern catalog.
+Read: `themes/<theme>/tokens.json` for slide dimensions (width/height), colors, and typography.
 
 ### 3. Create deck.yaml
 
@@ -38,6 +42,7 @@ slides:
 - Comparison: `comparison-columns`, `pricing-tiers`
 - Process/flow: `flow-diagram`, `three-pillars`
 - Content: `bullet-list`, `icon-grid`
+- Visual: `photo-split` (use `objectFit: contain` for screenshots)
 - Closing: `thank-you`
 
 ### 4. Validate
@@ -58,13 +63,19 @@ Ask the user for feedback and adjust slides accordingly.
 ## If no existing pattern fits
 
 Create a deck-local pattern at `decks/<deck-name>/patterns/<name>/index.tsx`:
+- **Read `design.md` first** — follow all color, typography, and layout rules
+- Slides are fixed at the dimensions defined in `tokens.json` (typically 1200x675, 16:9)
+- Content MUST NOT overflow the slide area — use `overflow: hidden` on the root
 - Export `schema` (Zod) and `default` (React component)
 - Use semantic CSS classes from the theme's `globals.css`
-- Do NOT hardcode colors — use CSS custom properties
+- Do NOT hardcode colors — use CSS custom properties (`var(--color-primary)`, etc.)
+- No pure black (`#000000`) for text, no pure white (`#ffffff`) for backgrounds
 - The pattern is compiled on-the-fly with esbuild, no build step needed
 
 ## Rules
+- **Always read `design.md` before creating or modifying any pattern**
 - Always validate before presenting to the user
 - Use pattern `examples.yaml` as reference for vars structure
 - Minimum font size: 16px, no serif fonts
-- Colors via CSS custom properties only
+- Colors via CSS custom properties only — follow the theme's color palette
+- All slides must fit within the fixed 16:9 slide dimensions — no scrolling, no overflow

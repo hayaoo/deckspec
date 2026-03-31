@@ -7,6 +7,7 @@ import { lockCommand } from "./commands/lock.js";
 import { patternsCommand } from "./commands/patterns.js";
 import { devCommand } from "./commands/dev.js";
 import { initCommand } from "./commands/init.js";
+import { doctorCommand } from "./commands/doctor.js";
 
 const USAGE = `
 Usage: deckspec <command> [options]
@@ -19,6 +20,7 @@ Commands:
   lock <file> [options]     Lock an approved slide as a reusable pattern
   patterns [--theme <name>] List available patterns with schemas
   dev [dir]                 Start dev server with dashboard (port 3002)
+  doctor [--theme <name>]   Check theme health and project setup
 
 Approve options:
   --slide <index[,...]>     Slide indices to approve
@@ -122,6 +124,11 @@ async function main(): Promise<void> {
 
     case "init": {
       await initCommand(args.slice(1));
+      break;
+    }
+
+    case "doctor": {
+      await doctorCommand(args.slice(1));
       break;
     }
 

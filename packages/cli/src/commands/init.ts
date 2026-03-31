@@ -7,6 +7,7 @@ import {
   writeFile,
   stat,
 } from "node:fs/promises";
+import { compileTsxCached } from "@deckspec/renderer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -130,8 +131,44 @@ tmp/
 `;
 }
 
-function generateClaudeMd(theme: string, patterns: string[]): string {
-  const patternList = patterns.map((p) => `- \`${p}\``).join("\n");
+interface PatternSchema {
+  name: string;
+  fields: Array<{ key: string; optional: boolean; description: string }>;
+}
+
+async function extractPatternSchemas(patternsDir: string, patternNames: string[]): Promise<PatternSchema[]> {
+  const schemas: PatternSchema[] = [];
+  for (const name of patternNames) {
+    try {
+      const tsxPath = join(patternsDir, name, "index.tsx");
+      const compiled = await compileTsxCached(tsxPath);
+      const mod = await import(compiled);
+      if (mod.schema?.shape) {
+        const fields = Object.entries(mod.schema.shape).map(([key, val]: [string, any]) => ({
+          key,
+          optional: val.isOptional?.() ?? false,
+          description: val.description ?? "",
+        }));
+        schemas.push({ name, fields });
+      } else {
+        schemas.push({ name, fields: [] });
+      }
+    } catch {
+      schemas.push({ name, fields: [] });
+    }
+  }
+  return schemas;
+}
+
+function generateClaudeMd(theme: string, schemas: PatternSchema[]): string {
+  const patternSection = schemas.map((s) => {
+    if (s.fields.length === 0) return `### \`${s.name}\`\n\n(schema not available)`;
+    const fields = s.fields.map((f) => {
+      const opt = f.optional ? " (optional)" : "";
+      return `  - \`${f.key}\`${opt}: ${f.description}`;
+    }).join("\n");
+    return `### \`${s.name}\`\n\n${fields}`;
+  }).join("\n\n");
 
   return `# DeckSpec Project
 
@@ -162,13 +199,15 @@ slides:
 
 ## Available Patterns (theme: ${theme})
 
-${patternList}
+${patternSection}
 
 Each pattern lives in \`themes/${theme}/patterns/<name>/index.tsx\` and exports:
 - \`export const schema\` — Zod schema defining accepted \`vars\`
 - \`export default Component\` — React component for SSR
 
 Check each pattern's \`examples.yaml\` (if present) for usage examples.
+Run \`npx deckspec patterns\` to see the latest schema definitions.
+Run \`npx deckspec patterns --json\` for machine-readable output.
 
 ## Commands
 
@@ -177,6 +216,7 @@ npx deckspec validate decks/sample/deck.yaml        # Validate YAML against Zod 
 npx deckspec render decks/sample/deck.yaml -o out    # Render to standalone HTML
 npx deckspec dev                                     # Live preview at http://localhost:3002
 npx deckspec patterns                                # List all patterns with schemas
+npx deckspec doctor                                  # Check theme health and project setup
 \`\`\`
 
 ## Creating a New Slide
@@ -195,9 +235,13 @@ If no existing pattern fits, create a custom one:
 3. Reference it in \`deck.yaml\` with \`file: <name>\`
 4. Deck-local patterns are compiled on-the-fly with esbuild — no build step needed
 
+**Important**: All slides are fixed at 1200×675px (16:9). Patterns must not overflow this area.
+See \`themes/${theme}/design.md\` for design constraints.
+
 ## Theme Design Reference
 
-See \`themes/${theme}/design.md\` for the theme's design principles, color palette, and typography rules.
+See \`themes/${theme}/design.md\` for the theme's design principles, color palette, typography rules, and forbidden colors.
+**AI agents must read design.md before creating or modifying patterns.**
 `;
 }
 
@@ -261,10 +305,11 @@ export async function initCommand(args: string[]): Promise<void> {
   await writeFile(pkgPath, generatePackageJson());
   console.log("  Created package.json");
 
-  // 4. Create CLAUDE.md
-  const patterns = await listPatternNames(join(themeDest, "patterns"));
+  // 4. Create CLAUDE.md (with schema info extracted from patterns)
+  const patternNames = await listPatternNames(join(themeDest, "patterns"));
+  const schemas = await extractPatternSchemas(join(themeDest, "patterns"), patternNames);
   const claudePath = join(root, "CLAUDE.md");
-  await writeFile(claudePath, generateClaudeMd(themeName, patterns));
+  await writeFile(claudePath, generateClaudeMd(themeName, schemas));
   console.log("  Created CLAUDE.md");
 
   // 5. Create .gitignore

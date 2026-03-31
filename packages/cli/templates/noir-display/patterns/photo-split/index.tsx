@@ -6,14 +6,16 @@ export const schema = z.object({
   body: z.string().min(1).max(300).describe("Body text"),
   image: z.string().min(1).describe("Image path or URL"),
   imagePosition: z.enum(["left", "right"]).optional().describe("Image position (default: right)"),
+  objectFit: z.enum(["cover", "contain"]).optional().describe("Image fit mode: cover (crop to fill, default) or contain (show entire image)"),
 });
 
 export const assets = [{ field: "image", type: "image" as const }];
 
 type Props = z.infer<typeof schema>;
 
-export default function PhotoSplit({ label, heading, body, image, imagePosition }: Props) {
+export default function PhotoSplit({ label, heading, body, image, imagePosition, objectFit }: Props) {
   const imgRight = imagePosition !== "left";
+  const fitMode = objectFit ?? "cover";
 
   const textBlock = (
     <div
@@ -79,7 +81,7 @@ export default function PhotoSplit({ label, heading, body, image, imagePosition 
         style={{
           width: "100%",
           height: "100%",
-          objectFit: "cover",
+          objectFit: fitMode,
         }}
       />
     </div>

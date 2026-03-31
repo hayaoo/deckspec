@@ -49,7 +49,8 @@ async function renderDeckByPath(
   const basePath = dirname(filePath);
   const themeName = extractThemeName(raw);
   const patternsDir = resolveThemePatternsDir(themeName);
-  const result = await validateDeck(raw, { basePath, patternsDir, compileTsx: compileTsxCached });
+  const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
+  const result = await validateDeck(raw, { basePath, patternsDir, patternsSrcDir, compileTsx: compileTsxCached });
 
   if (!result.valid) {
     const errors = result.results
@@ -61,7 +62,6 @@ async function renderDeckByPath(
 
   const deck = raw as Deck;
   const themeCSS = await loadThemeCSS(deck.meta.theme);
-  const patternsSrcDir = resolveThemePatternsSrcDir(themeName);
   return renderDeck(deck, themeCSS, { basePath, patternsDir, patternsSrcDir });
 }
 

@@ -10,6 +10,7 @@ import yaml from "js-yaml";
 export async function patternsCommand(args: string[]): Promise<void> {
   let themeName = "noir-display";
   let showExamples = false;
+  let jsonOutput = false;
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--theme" && args[i + 1]) {
       themeName = args[i + 1];
@@ -17,6 +18,9 @@ export async function patternsCommand(args: string[]): Promise<void> {
     }
     if (args[i] === "--examples") {
       showExamples = true;
+    }
+    if (args[i] === "--json") {
+      jsonOutput = true;
     }
   }
 
@@ -66,7 +70,13 @@ export async function patternsCommand(args: string[]): Promise<void> {
   }
 
   patternNames.sort();
-  console.log(`Available patterns (theme: ${themeName}):\n`);
+
+  // Collect pattern data
+  const patternData: Array<{
+    name: string;
+    fields: Array<{ key: string; optional: boolean; description: string }>;
+    examples: Array<{ name: string; description?: string; vars: unknown }>;
+  }> = [];
 
   for (const name of patternNames) {
     try {
@@ -82,42 +92,64 @@ export async function patternsCommand(args: string[]): Promise<void> {
       }
 
       // Check for examples.yaml
-      let hasExamples = false;
       let examples: Array<{ name: string; description?: string; vars: unknown }> = [];
       try {
         const examplesPath = join(patternsSrcDir, name, "examples.yaml");
         const examplesContent = await readFile(examplesPath, "utf-8");
         examples = yaml.load(examplesContent) as typeof examples;
-        hasExamples = true;
       } catch {
         // no examples
       }
 
-      if (mod.schema) {
-        const shape = mod.schema.shape;
-        const fields = Object.entries(shape)
-          .map(([key, val]: [string, any]) => {
-            const desc = val.description ?? "";
-            const optional = val.isOptional?.() ? "?" : "";
-            return `    ${key}${optional}: ${desc}`;
-          })
-          .join("\n");
-        const badge = hasExamples ? " [examples]" : "";
-        console.log(`  ${name}:${badge}`);
-        console.log(fields);
-      } else {
-        console.log(`  ${name}: (no schema)`);
-      }
-
-      // Show examples if requested
-      if (showExamples && examples.length > 0) {
-        console.log(`    --- examples ---`);
-        for (const ex of examples) {
-          console.log(`    "${ex.name}"${ex.description ? ` — ${ex.description}` : ""}`);
+      const fields: Array<{ key: string; optional: boolean; description: string }> = [];
+      if (mod.schema?.shape) {
+        for (const [key, val] of Object.entries(mod.schema.shape) as Array<[string, any]>) {
+          fields.push({
+            key,
+            optional: val.isOptional?.() ?? false,
+            description: val.description ?? "",
+          });
         }
       }
+
+      patternData.push({ name, fields, examples });
     } catch {
-      console.log(`  ${name}: (failed to load)`);
+      patternData.push({ name, fields: [], examples: [] });
+    }
+  }
+
+  // JSON output mode
+  if (jsonOutput) {
+    console.log(JSON.stringify({ theme: themeName, patterns: patternData }, null, 2));
+    return;
+  }
+
+  // Human-readable output
+  console.log(`Available patterns (theme: ${themeName}):\n`);
+
+  for (const pattern of patternData) {
+    const hasExamplesFlag = pattern.examples.length > 0;
+
+    if (pattern.fields.length > 0) {
+      const fields = pattern.fields
+        .map((f) => {
+          const optional = f.optional ? "?" : "";
+          return `    ${f.key}${optional}: ${f.description}`;
+        })
+        .join("\n");
+      const badge = hasExamplesFlag ? " [examples]" : "";
+      console.log(`  ${pattern.name}:${badge}`);
+      console.log(fields);
+    } else {
+      console.log(`  ${pattern.name}: (no schema)`);
+    }
+
+    // Show examples if requested
+    if (showExamples && pattern.examples.length > 0) {
+      console.log(`    --- examples ---`);
+      for (const ex of pattern.examples) {
+        console.log(`    "${ex.name}"${ex.description ? ` — ${ex.description}` : ""}`);
+      }
     }
     console.log();
   }
