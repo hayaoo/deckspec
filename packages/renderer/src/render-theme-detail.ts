@@ -2,7 +2,8 @@ import type { ThemeTokens } from "./theme.js";
 import { dashboardCSS } from "./dashboard-css.js";
 import { dashboardJS } from "./dashboard-js.js";
 
-function escapeHtml(text: string): string {
+function escapeHtml(text: string | undefined | null): string {
+  if (text == null) return "";
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
