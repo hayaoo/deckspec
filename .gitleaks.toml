@@ -1,0 +1,13 @@
+title = "deckspec gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist"
+paths = [
+  '''node_modules''',
+  '''dist''',
+  '''\.turbo''',
+  '''pnpm-lock\.yaml''',
+]

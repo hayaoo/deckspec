@@ -1,0 +1,6 @@
+# デフォルト: 全ファイルにオーナーレビュー必須
+* @hayaoo
+
+# セキュリティ上重要なファイル
+.github/ @hayaoo
+.changeset/config.json @hayaoo

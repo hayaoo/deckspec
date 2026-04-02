@@ -34,6 +34,7 @@
     "url": "https://github.com/hayaoo/deckspec/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
