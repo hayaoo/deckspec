@@ -303,7 +303,7 @@ async function handleRequest(
     error(res, 404, "Not found");
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[dev] Error: ${message}`);
+    console.error("[dev] Error:", err instanceof Error ? err : message);
     error(res, 500, message);
   }
 }

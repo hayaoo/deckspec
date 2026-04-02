@@ -120,7 +120,8 @@ ${viewerJS}
 /**
  * Escapes HTML special characters in a string.
  */
-function escapeHtml(text: string): string {
+function escapeHtml(text: string | undefined | null): string {
+  if (text == null) return "";
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
