@@ -30,8 +30,12 @@ output/
 tmp/
 .deckspec-cache/
 
+# User decks (generated via `deckspec init` or manually)
+decks/
+
 # Agent caches
 .agent/
 .agents/
 .claude/
+!.claude/skills/
 .playwright-mcp/
