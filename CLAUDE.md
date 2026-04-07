@@ -16,7 +16,7 @@ packages/
   renderer/   — @deckspec/renderer (HTML/PPTX 出力)
 themes/
   noir-display/ — @deckspec/theme-noir-display
-decks/        — サンプルデッキ
+decks/        — ユーザーデッキ (.gitignore、`deckspec init` で生成)
 ```
 
 ## 開発コマンド
