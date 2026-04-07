@@ -1,5 +1,14 @@
 # @deckspec/cli
 
+## 0.2.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @deckspec/dsl@0.2.0
+  - @deckspec/schema@0.2.0
+  - @deckspec/renderer@0.2.0
+
 ## 0.1.13
 
 ### Patch Changes
