@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.0",
-    "lucide-react": "^1.7.0",
+    "lucide-react": "^1.8.0",
     "zod": "^3.23.0"
   },
   "peerDependencies": {
