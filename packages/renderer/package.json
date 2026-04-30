@@ -17,7 +17,7 @@
     "@deckspec/dsl": "workspace:*",
     "@deckspec/schema": "workspace:*",
     "esbuild": "^0.27.7",
-    "zod": "^3.23.0"
+    "zod": "^4.4.1"
   },
   "peerDependencies": {
     "react": "^19.0.0",
