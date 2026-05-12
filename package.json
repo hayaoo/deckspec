@@ -39,5 +39,14 @@
   },
   "dependencies": {
     "esbuild": "^0.27.7"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "overrides": {
+      "vite": "^8.0.12",
+      "postcss": "^8.5.14"
+    }
   }
 }
