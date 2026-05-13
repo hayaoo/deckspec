@@ -108,9 +108,9 @@ function generatePackageJson(): string {
       private: true,
       type: "module",
       dependencies: {
-        "@deckspec/cli": "^0.1.0",
+        "@deckspec/cli": "^0.2.0",
         "@phosphor-icons/react": "^2.1.0",
-        "lucide-react": "^0.469.0",
+        "lucide-react": "^1.7.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "zod": "^3.23.0",
