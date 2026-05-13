@@ -10,7 +10,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write      # changesets が Version PR・タグ作成に必要
   pull-requests: write # changesets が PR 更新に必要
-  id-token: write      # npm provenance (出所証明) に必要
+  id-token: write      # npm Trusted Publisher (OIDC) で publish するため
 
 jobs:
   release:
@@ -25,13 +25,16 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
+      # npm Trusted Publisher (OIDC) で publish する。NPM_TOKEN は意図的に
+      # 渡さない — env に NPM_TOKEN があると changesets/action が .npmrc に
+      # トークンを書き込んで OIDC ではなくトークン認証になってしまう。
       - uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
         with:
-          publish: pnpm -r publish --provenance
+          publish: pnpm -r publish --provenance --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
