@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch: # NPM_TOKEN ローテーション後などに手動再実行するため
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
