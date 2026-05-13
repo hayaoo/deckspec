@@ -30,11 +30,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      # npm Trusted Publisher (OIDC) で publish する。NPM_TOKEN は意図的に
-      # 渡さない — env に NPM_TOKEN があると changesets/action が .npmrc に
-      # トークンを書き込んで OIDC ではなくトークン認証になってしまう。
+      # OIDC を確実に使うため、publish は npm CLI に揃える (pnpm 9 の OIDC
+      # 実装は不安定で、npm 側 Trusted Publisher と組み合わせると 404 になる)。
+      # 11.5.1+ の npm に上げ、changesets/action から呼ぶ。
+      - run: npm install -g npm@latest
+
+      # npm Trusted Publisher (OIDC) で publish。NPM_TOKEN は意図的に渡さない。
       - uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
         with:
-          publish: pnpm -r publish --provenance --access public
+          publish: ./scripts/publish.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
