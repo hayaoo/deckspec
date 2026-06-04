@@ -34,7 +34,7 @@ jobs:
       - run: pnpm build
 
       # npm Trusted Publisher (OIDC) で publish。NPM_TOKEN は意図的に渡さない。
-      - uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
+      - uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           publish: ./scripts/publish.sh
         env:
