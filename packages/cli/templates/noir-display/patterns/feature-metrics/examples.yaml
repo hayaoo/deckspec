@@ -1,0 +1,22 @@
+- name: "KPIハイライト"
+  description: "3つの主要指標を横並びで提示"
+  vars:
+    headline: "1年目の成果"
+    metrics:
+      - label: "登録ユーザー"
+        value: "1.2万"
+      - label: "継続率"
+        value: "92%"
+      - label: "平均集中時間"
+        value: "+6.4h"
+- name: "Quarterly metrics"
+  description: "Key numbers side by side"
+  vars:
+    headline: "Q4 in numbers"
+    metrics:
+      - label: "Revenue"
+        value: "$12.4M"
+      - label: "Growth"
+        value: "+34%"
+      - label: "Renewals"
+        value: "95%"

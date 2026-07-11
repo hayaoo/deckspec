@@ -1,0 +1,32 @@
+- name: "従来手法との比較"
+  description: "2案をチェックリストで対比"
+  vars:
+    heading: "Unfocus が違うところ"
+    columns:
+      - name: "一般的なタイマー"
+        items:
+          - "時間を測るだけ"
+          - "通知はそのまま"
+          - "記録が残らない"
+      - name: "Unfocus"
+        highlighted: true
+        items:
+          - "通知を自動で遮断"
+          - "集中を自動で記録"
+          - "習慣として続く"
+- name: "Build vs buy"
+  description: "Two-column comparison"
+  vars:
+    heading: "Two ways forward"
+    columns:
+      - name: "Build in-house"
+        items:
+          - "Months of work"
+          - "Ongoing maintenance"
+          - "Hard to staff"
+      - name: "Adopt Unfocus"
+        highlighted: true
+        items:
+          - "Live this week"
+          - "We maintain it"
+          - "No new hires"

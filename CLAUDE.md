@@ -16,8 +16,11 @@ packages/
   renderer/   — @deckspec/renderer (HTML/PPTX 出力)
 themes/
   noir-display/ — @deckspec/theme-noir-display
+                  design.md (設計意図) + harness.json (機械可読デザインルール)
 decks/        — ユーザーデッキ (.gitignore、`deckspec init` で生成)
 ```
+
+`deckspec lint <deck.yaml>` はデッキ構成とデッキローカルパターンを harness.json のルールで評価する（validate=構造検証、lint=デザイン評価）。
 
 ## 開発コマンド
 

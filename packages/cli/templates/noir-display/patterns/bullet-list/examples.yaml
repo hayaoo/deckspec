@@ -1,0 +1,24 @@
+- name: "機能ハイライト"
+  description: "左見出し＋右の番号付きリスト"
+  vars:
+    label: "できること"
+    heading: "3ステップで集中モードへ"
+    items:
+      - title: "通知を遮断"
+        description: "作業中はすべての通知を止める。"
+      - title: "時間を区切る"
+        description: "25分の集中と5分の休憩を繰り返す。"
+      - title: "記録を残す"
+        description: "集中した時間を自動で可視化する。"
+- name: "Onboarding steps"
+  description: "Numbered list with a left heading"
+  vars:
+    label: "How it works"
+    heading: "Get set up in minutes"
+    items:
+      - title: "Connect your calendar"
+        description: "We find your open focus blocks."
+      - title: "Pick a ritual"
+        description: "Choose a timer that fits your work."
+      - title: "Start focusing"
+        description: "Notifications pause automatically."

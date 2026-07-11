@@ -1,0 +1,44 @@
+- name: "プロダクトロードマップ"
+  description: "2〜4フェーズを施策とともに示す"
+  vars:
+    label: "計画"
+    heading: "今年のロードマップ"
+    banner: "目標：10万ユーザーの深い集中を支える"
+    phases:
+      - name: "Phase1"
+        title: "基盤づくり"
+        items:
+          - "集中タイマーの改善"
+          - "集中ログの可視化"
+      - name: "Phase2"
+        title: "習慣化"
+        items:
+          - "リマインド機能"
+          - "週次レポート"
+      - name: "Phase3"
+        title: "拡張"
+        items:
+          - "チーム機能"
+          - "API公開"
+- name: "Go-to-market roadmap"
+  description: "Phased plan with actions"
+  vars:
+    label: "Plan"
+    heading: "Path to launch"
+    banner: "Goal: reach 10k weekly active users"
+    phases:
+      - name: "Now"
+        title: "Foundation"
+        items:
+          - "Ship core timer"
+          - "Instrument analytics"
+      - name: "Next"
+        title: "Habit"
+        items:
+          - "Smart reminders"
+          - "Weekly reports"
+      - name: "Later"
+        title: "Scale"
+        items:
+          - "Team spaces"
+          - "Public API"

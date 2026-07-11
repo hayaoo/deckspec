@@ -22,3 +22,14 @@ export {
   svgAssetSchema,
   imageSchema,
 } from "./elements.js";
+
+export {
+  harnessRulesSchema,
+  type HarnessRules,
+  harnessCompositionSchema,
+  type HarnessComposition,
+  harnessPatternSchema,
+  type HarnessPattern,
+  harnessSchema,
+  type Harness,
+} from "./harness.js";

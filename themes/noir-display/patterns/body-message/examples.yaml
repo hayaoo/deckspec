@@ -1,0 +1,54 @@
+- name: "中心概念の図解"
+  description: "中心テーマと周辺ノードを対応説明つきで図解"
+  vars:
+    label: "全体像"
+    heading: "集中を支える仕組み"
+    center: "深い集中"
+    nodes:
+      - id: "A"
+        title: "遮断"
+      - id: "B"
+        title: "計測"
+      - id: "C"
+        title: "習慣"
+    explanations:
+      - id: "A"
+        title: "遮断"
+        items:
+          - "通知を自動で止める"
+      - id: "B"
+        title: "計測"
+        items:
+          - "集中時間を記録する"
+      - id: "C"
+        title: "習慣"
+        items:
+          - "毎日つづける設計"
+    footer: "3つが噛み合うと集中は続く"
+- name: "System overview"
+  description: "Central concept with supporting nodes"
+  vars:
+    label: "Overview"
+    heading: "How focus compounds"
+    center: "Deep focus"
+    nodes:
+      - id: "A"
+        title: "Block"
+      - id: "B"
+        title: "Measure"
+      - id: "C"
+        title: "Repeat"
+    explanations:
+      - id: "A"
+        title: "Block"
+        items:
+          - "Silence interruptions"
+      - id: "B"
+        title: "Measure"
+        items:
+          - "Log every focus session"
+      - id: "C"
+        title: "Repeat"
+        items:
+          - "Make it a daily habit"
+    footer: "Together they keep focus going"

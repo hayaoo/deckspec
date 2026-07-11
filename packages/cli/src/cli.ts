@@ -5,6 +5,7 @@ import { renderCommand } from "./commands/render.js";
 import { approveCommand } from "./commands/approve.js";
 import { lockCommand } from "./commands/lock.js";
 import { patternsCommand } from "./commands/patterns.js";
+import { lintCommand } from "./commands/lint.js";
 import { devCommand } from "./commands/dev.js";
 import { initCommand } from "./commands/init.js";
 import { doctorCommand } from "./commands/doctor.js";
@@ -15,6 +16,7 @@ Usage: deckspec <command> [options]
 Commands:
   init [dir] [--theme <name>]  Scaffold a new DeckSpec project
   validate <file>           Validate a deck YAML file
+  lint [file] [options]     Evaluate deck composition + patterns against design rules
   render <file> -o <output> Render a deck YAML file to HTML
   approve <file> [options]  Approve/reject slides or archive/activate decks
   lock <file> [options]     Lock an approved slide as a reusable pattern
@@ -31,6 +33,11 @@ Approve options:
 Lock options:
   --slide <index>           Slide index to lock
   --name <pattern-name>     Name for the generated pattern
+
+Lint options:
+  --theme <name>            Self-check a theme's own pattern sources
+  --strict                  Exit non-zero on warnings (for CI)
+  --json                    Machine-readable output
 
 Options:
   --help                    Show this help message
@@ -103,6 +110,11 @@ async function main(): Promise<void> {
 
     case "patterns": {
       await patternsCommand(args.slice(1));
+      break;
+    }
+
+    case "lint": {
+      await lintCommand(args.slice(1));
       break;
     }
 

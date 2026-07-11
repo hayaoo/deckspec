@@ -4,7 +4,26 @@
 
 Programmable presentation platform. Write YAML, validate with Zod, render with React SSR.
 
-DeckSpec is a presentation framework designed for AI agents. AI generates the content, schemas enforce structure, humans approve the result.
+DeckSpec is a **design harness for slides** — it surrounds an AI agent with the constraints, context, verification, and evaluation it needs to produce on-brand decks that stay consistent as they grow. AI generates the content, schemas enforce structure, the linter evaluates the design, and humans approve the result.
+
+## The Design Harness
+
+A design harness is the environment that keeps an AI on-spec: not a prompt, but machine-readable rules plus automated checks. DeckSpec implements four layers:
+
+| Layer | Role | Where it lives | Enforced by |
+|-------|------|----------------|-------------|
+| **Constraints** | What is structurally allowed | Zod pattern schemas + theme tokens (`tokens.json`) | Type/shape validation |
+| **Context** | When to reach for each pattern | `design.md` + `harness.json` (`whenToUse`) + `examples.yaml` | AI few-shot / catalog |
+| **Verification** | Is the deck structurally valid | `deckspec validate` | Zod |
+| **Evaluation** | Does it follow the design rules | `deckspec lint` | `harness.json` rules |
+
+The loop:
+
+```
+AI generates → schema validates → lint evaluates → human approves
+```
+
+`harness.json` (per theme) makes the design system's forbidden colors, allowed font weights, minimum font size, shadow limits, character budgets, and per-pattern usage machine-readable — so `deckspec lint` can catch design drift (the "AI-generated look", inconsistency that creeps in as slide count grows) that prose guidelines and Zod schemas miss.
 
 ## How It Works
 
@@ -101,6 +120,7 @@ themes/noir-display/
   tokens.json       — Colors, fonts, spacing
   globals.css       — Semantic CSS classes
   design.md         — Design philosophy (AI context)
+  harness.json      — Machine-readable design rules (deckspec lint)
   components/       — Shared UI parts
   patterns/         — Reusable slide layouts
 ```
@@ -112,6 +132,7 @@ After `deckspec init`, the theme is copied locally. You own it — customize col
 ```bash
 deckspec init [dir] --theme <name>   # Scaffold a new project
 deckspec validate <deck.yaml>        # Validate with Zod
+deckspec lint <deck.yaml>            # Evaluate composition + patterns vs design rules
 deckspec render <deck.yaml> -o out   # Render to HTML
 deckspec dev [dir]                   # Dev server with live preview
 deckspec patterns [--theme <name>]   # List available patterns
@@ -132,10 +153,11 @@ deckspec lock <deck.yaml> --slide N --name <name>  # Lock as pattern
 
 DeckSpec is designed to be used by AI agents (Claude Code, etc.):
 
-1. AI reads `CLAUDE.md` and `themes/<theme>/design.md` for context
+1. AI reads `CLAUDE.md`, `themes/<theme>/design.md`, and `harness.json` for context
 2. AI writes `deck.yaml` using available patterns and vars
-3. Human previews with `deckspec dev` and approves slides
-4. Approved patterns are locked and reused across decks
+3. AI runs `deckspec validate` (structure) and `deckspec lint` (design) and fixes issues
+4. Human previews with `deckspec dev` and approves slides
+5. Approved patterns are locked and reused across decks
 
 ### What `deckspec init` generates
 

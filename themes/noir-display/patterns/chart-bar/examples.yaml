@@ -1,0 +1,31 @@
+- name: "月次の集中時間"
+  description: "単一系列の棒グラフで推移を示す"
+  vars:
+    label: "推移"
+    heading: "1日あたりの集中時間（時間）"
+    data:
+      - label: "1月"
+        value: 2.1
+      - label: "2月"
+        value: 3.4
+      - label: "3月"
+        value: 4.8
+      - label: "4月"
+        value: 6.4
+- name: "Plan vs actual"
+  description: "Two-series bar comparison"
+  vars:
+    label: "Progress"
+    heading: "Weekly focus hours"
+    series1Name: "Target"
+    series2Name: "Actual"
+    data:
+      - label: "W1"
+        value: 20
+        value2: 18
+      - label: "W2"
+        value: 20
+        value2: 22
+      - label: "W3"
+        value: 20
+        value2: 25

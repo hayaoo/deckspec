@@ -51,13 +51,22 @@ npx deckspec validate decks/<deck-name>/deck.yaml
 ```
 Fix any schema errors.
 
-### 5. Preview
+### 5. Lint (design evaluation)
+```bash
+npx deckspec lint decks/<deck-name>/deck.yaml
+```
+`lint` evaluates composition and content against the theme's design rules (`themes/<theme>/harness.json`). Errors must be fixed; address warnings before showing the user:
+- "文字量が多すぎます / too many characters" → cut text or split the slide (1 slide = 1 message).
+- "単調 / monotonous" → vary the pattern so the same layout does not repeat too many times in a row.
+- Hex colors or raw HTML in vars → keep content plain; let the pattern own the styling.
+
+### 6. Preview
 ```bash
 npx deckspec dev
 ```
 Open http://localhost:3002 and navigate to the deck.
 
-### 6. Iterate
+### 7. Iterate
 Ask the user for feedback and adjust slides accordingly.
 
 ## If no existing pattern fits

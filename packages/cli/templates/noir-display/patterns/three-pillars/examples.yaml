@@ -1,0 +1,24 @@
+- name: "3つの価値"
+  description: "対等な3カードで柱を提示"
+  vars:
+    label: "提供価値"
+    heading: "Unfocus が大切にする3つのこと"
+    pillars:
+      - title: "集中"
+        description: "余計なものを消し、深い作業に入る。"
+      - title: "記録"
+        description: "がんばりを数字で振り返る。"
+      - title: "習慣"
+        description: "毎日つづく設計にする。"
+- name: "Strategic priorities"
+  description: "Three equal pillars"
+  vars:
+    label: "Priorities"
+    heading: "Where we focus"
+    pillars:
+      - title: "Expand"
+        description: "Enter three new markets."
+      - title: "Optimize"
+        description: "Cut acquisition cost by 20%."
+      - title: "Retain"
+        description: "Hold a 95% renewal rate."
