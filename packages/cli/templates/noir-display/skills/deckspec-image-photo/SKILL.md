@@ -91,7 +91,9 @@ prompt recipe — do not loosen the style to accommodate a bad generation.
   them through unchanged.
 - The image background must match `images.styles.photo.background`.
 - **No text inside images.** All words belong in the slide's `vars` (rendered with
-  the brand font by the pattern), never baked into the pixels — generated text is
-  unreliable and breaks brand typography.
+  the brand font by the pattern), never baked into the pixels. Modern generators
+  (gpt-image, Gemini) render text accurately, but baked-in text still can't use the
+  theme's fonts/tokens and can't be edited, translated, or linted afterwards.
+  (Diffusion-based providers additionally garble text.)
 - If a deck mixes photo and diagram images, each keeps its own style's background;
   do not unify them.
