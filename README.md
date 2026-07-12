@@ -25,6 +25,25 @@ AI generates → schema validates → lint evaluates → human approves
 
 `harness.json` (per theme) makes the design system's forbidden colors, allowed font weights, minimum font size, shadow limits, character budgets, and per-pattern usage machine-readable — so `deckspec lint` can catch design drift (the "AI-generated look", inconsistency that creeps in as slide count grows) that prose guidelines and Zod schemas miss.
 
+## Theme-Bundled Image Skills
+
+Design consistency extends to imagery. A theme declares its image language in the same `harness.json`: which **provider** generates images (the subscription **codex CLI** or the **Gemini API**) and two machine-readable **style recipes** — `photo` (clean, minimal product-style photography) and `diagram` (flat thin-line illustration). Theme-bundled skills (`deckspec-image-photo`, `deckspec-image-diagram`, copied into `.claude/skills/` on `init`) read this section and enforce the visual language, so images stay on-brand as a deck grows.
+
+```jsonc
+// themes/<theme>/harness.json
+"images": {
+  "provider": "codex",                     // or "gemini"
+  "outputDir": "decks/{deck}/assets",
+  "noTextInImages": true,                  // text lives in slide vars, never baked into pixels
+  "styles": {
+    "photo":   { "stylePrompt": "…", "negativePrompt": "…", "background": "#f5f5f7" },
+    "diagram": { "stylePrompt": "…", "negativePrompt": "…", "background": "#ffffff" }
+  }
+}
+```
+
+The skills carry no theme-specific values — they always read `harness.json` and follow it. So a theme author defines their own image language by **swapping the `styles` recipes** (and the provider) in `harness.json`; the skills need no edits.
+
 ## How It Works
 
 ```
@@ -121,6 +140,7 @@ themes/noir-display/
   globals.css       — Semantic CSS classes
   design.md         — Design philosophy (AI context)
   harness.json      — Machine-readable design rules (deckspec lint)
+  skills/           — Theme-bundled skills (image generation, etc.)
   components/       — Shared UI parts
   patterns/         — Reusable slide layouts
 ```
@@ -164,7 +184,7 @@ DeckSpec is designed to be used by AI agents (Claude Code, etc.):
 `deckspec init` scaffolds everything an AI agent needs:
 
 - **`CLAUDE.md`** — YAML DSL spec, pattern catalog, CLI usage
-- **`.claude/skills/`** — 5 ready-to-use Claude Code skills:
+- **`.claude/skills/`** — ready-to-use Claude Code skills (5 generic + any the theme bundles):
 
 | Skill | Trigger | What it does |
 |-------|---------|-------------|
@@ -173,6 +193,8 @@ DeckSpec is designed to be used by AI agents (Claude Code, etc.):
 | `deckspec-screenshot` | "screenshot", "capture slides" | Export slides as PNG images via Playwright |
 | `deckspec-to-pptx` | "PowerPoint", "pptx" | Convert deck.yaml to .pptx via pptxgenjs |
 | `deckspec-promote-pattern` | "promote pattern", "elevate to theme" | Interactive promotion of deck-local patterns to theme patterns |
+| `deckspec-image-photo` | "generate a photo", "写真を生成" | *Theme-bundled.* Photographic images following the theme's `harness.json` image language |
+| `deckspec-image-diagram` | "generate a diagram", "図解画像を作って" | *Theme-bundled.* Flat thin-line diagrams following the theme's `harness.json` image language |
 
 Just run `deckspec init`, open Claude Code, and say "make slides about X" — the AI knows the DSL, the available patterns, and the full workflow.
 

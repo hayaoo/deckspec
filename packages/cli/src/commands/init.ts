@@ -212,6 +212,7 @@ Run \`npx deckspec patterns --json\` for machine-readable output.
 
 \`\`\`bash
 npx deckspec validate decks/sample/deck.yaml        # Validate YAML against Zod schemas
+npx deckspec lint decks/sample/deck.yaml            # Evaluate deck & patterns against the theme's design rules (harness.json)
 npx deckspec render decks/sample/deck.yaml -o out    # Render to standalone HTML
 npx deckspec dev                                     # Live preview at http://localhost:3002
 npx deckspec patterns                                # List all patterns with schemas
@@ -253,8 +254,24 @@ This ensures patterns render correctly even if theme CSS is not loaded.
 
 ## Theme Design Reference
 
-See \`themes/${theme}/design.md\` for the theme's design principles, color palette, typography rules, and forbidden colors.
-**AI agents must read design.md before creating or modifying patterns.**
+The theme carries its design system in two paired files — read both before touching a deck or a pattern:
+
+| File | What it holds | Enforced by |
+|------|---------------|-------------|
+| \`themes/${theme}/design.md\` | Design *rationale* — principles, palette, typography, the "why" (human + AI context) | prose (read it) |
+| \`themes/${theme}/harness.json\` | *Machine-readable* rules — forbidden colors, allowed font weights, min font size, shadow cap, char budgets, per-pattern usage | \`deckspec lint\` |
+
+**AI agents must read design.md _and_ harness.json before creating or modifying patterns.**
+The loop is read → obey → verify: read both files, follow them while authoring, then run \`npx deckspec lint\` after editing a deck or a pattern and fix everything it flags. \`design.md\` explains intent; \`harness.json\` is the enforceable subset — keep their values in sync if you edit either.
+
+## Image Generation
+
+If the theme bundles image skills (see \`.claude/skills/\`), use them instead of ad-hoc prompts so every deck shares one visual language:
+
+- **\`deckspec-image-photo\`** — "写真を生成" / "generate a photo": clean, minimal product-style photography.
+- **\`deckspec-image-diagram\`** — "図解画像を作って" / "generate a diagram": flat thin-line illustrations.
+
+Both read \`themes/${theme}/harness.json\` → \`images\` for the provider (codex CLI or Gemini API) and the photo/diagram style recipes, write to \`decks/<deck>/assets/\`, and reference the file from \`deck.yaml\` with a relative path. **Images must contain no text** (\`noTextInImages\`) — all words live in slide \`vars\`, rendered with the brand font.
 
 ## Theme Compatibility Note
 
@@ -335,17 +352,40 @@ export async function initCommand(args: string[]): Promise<void> {
   await writeFile(gitignorePath, generateGitignore());
   console.log("  Created .gitignore");
 
-  // 6. Copy skills to .claude/skills/
+  // 6. Copy generic skills to .claude/skills/
+  const skillsDest = join(root, ".claude", "skills");
   const skillsSrc = join(templatesDir, "skills");
   try {
     const s2 = await stat(skillsSrc);
     if (s2.isDirectory()) {
-      const skillsDest = join(root, ".claude", "skills");
       console.log("  Copying skills to .claude/skills/");
       await copyDirRecursive(skillsSrc, skillsDest);
     }
   } catch {
     // skills template directory not found — skip silently
+  }
+
+  // 7. Copy theme-bundled skills (e.g. image generation) to .claude/skills/.
+  //    The theme was copied in step 1, so its skills/ already exists at
+  //    themeDest/skills/. Copying them last lets a theme override a same-named
+  //    generic skill with its own visual-language-aware version.
+  const themeSkillsSrc = join(themeDest, "skills");
+  try {
+    const s3 = await stat(themeSkillsSrc);
+    if (s3.isDirectory()) {
+      const themeSkillNames = (await readdir(themeSkillsSrc, { withFileTypes: true }))
+        .filter((e) => e.isDirectory())
+        .map((e) => e.name)
+        .sort();
+      if (themeSkillNames.length > 0) {
+        await copyDirRecursive(themeSkillsSrc, skillsDest);
+        console.log(
+          `  Copying theme skills to .claude/skills/ (${themeSkillNames.join(", ")})`,
+        );
+      }
+    }
+  } catch {
+    // theme has no bundled skills — skip silently
   }
 
   console.log("");

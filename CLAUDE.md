@@ -17,6 +17,7 @@ packages/
 themes/
   noir-display/ — @deckspec/theme-noir-display
                   design.md (設計意図) + harness.json (機械可読デザインルール)
+                  skills/ (テーマ同梱スキル: 画像生成 photo/diagram 等)
 decks/        — ユーザーデッキ (.gitignore、`deckspec init` で生成)
 ```
 

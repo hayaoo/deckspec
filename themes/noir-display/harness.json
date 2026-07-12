@@ -99,5 +99,33 @@
       "whenNotToUse": "中盤のスライド。情報や本文を載せたいとき。",
       "charBudget": 360
     }
+  },
+  "images": {
+    "provider": "codex",
+    "providers": {
+      "codex": {
+        "note": "Generates via the codex CLI (subscription, gpt-image family). Confirm the exact image flags with `codex --help` before running — do not assume fixed flags."
+      },
+      "gemini": {
+        "note": "Generates via the Gemini API. Requires GEMINI_API_KEY.",
+        "model": "gemini-2.5-flash-image"
+      }
+    },
+    "outputDir": "decks/{deck}/assets",
+    "noTextInImages": true,
+    "styles": {
+      "photo": {
+        "stylePrompt": "minimal product photography, single subject, soft diffused studio lighting, seamless light grey (#f5f5f7) background, generous negative space, muted low-saturation palette, shallow depth of field, clean and premium Apple.com product-page aesthetic",
+        "negativePrompt": "text, letters, typography, watermark, logo, loud colors, high saturation, clutter, busy composition, dark background, harsh shadows",
+        "background": "#f5f5f7",
+        "aspectRatios": ["16:9", "4:3", "1:1"]
+      },
+      "diagram": {
+        "stylePrompt": "flat thin-line diagram, single-weight strokes in #1d1d1f on a pure white background, one accent color #0071e3 used sparingly, no gradients, no shadows, no fills, generous whitespace, minimal geometric shapes, clean vector illustration",
+        "negativePrompt": "text labels, letters, typography, gradients, shadows, 3d, skeuomorphism, multiple accent colors, textures, photorealism",
+        "background": "#ffffff",
+        "aspectRatios": ["16:9", "1:1"]
+      }
+    }
   }
 }

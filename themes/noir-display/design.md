@@ -109,6 +109,28 @@ body:    SF Pro JP → SF Pro Text    → Hiragino Sans → Helvetica Neue → N
 - カード角丸: 18px（大型タイル）, 12px（標準）, 16px（フローステップ）
 - ボタン角丸: 980px（完全ピル）
 
+## 画像スタイル
+
+デッキに載せる画像も、パターンと同じく「テーマの視覚言語」として一貫させる。
+機械可読な正本は `harness.json` の `images` セクション（`provider` / `styles.photo` / `styles.diagram` / `outputDir` / `noTextInImages`）にあり、本節はその設計意図（rationale）。値を変えるときは harness.json 側を正として一致させること。テーマ同梱スキル `deckspec-image-photo` / `deckspec-image-diagram` はこの harness.json を読んで生成する。
+
+### プロバイダ
+
+生成エンジンはテーマが宣言する（`images.provider`）。サブスクの **codex CLI**（gpt-image 系）か、**Gemini API**（`GEMINI_API_KEY` 必須）を選べる。プロバイダを差し替えても視覚言語（styles）は不変に保つ。
+
+### 2系統のスタイル
+
+| スタイル | 用途 | 背景 | 世界観 |
+|--------|------|------|--------|
+| **photo**（写真系） | photo-split 等のビジュアル面 | `#f5f5f7` | ミニマルな物撮り。ソフトな拡散光、ライトグレーのシームレス背景、大きな余白、彩度控えめ。Apple.com のプロダクト写真の空気感 |
+| **diagram**（図解系） | プロセス・概念図 | `#ffffff` | フラットで細い線の図。線は `#1d1d1f`、アクセントは `#0071e3` の単色のみ。グラデーション・影・3D なし、余白多め |
+
+photo は彩度と装飾を抑えてキャンバスグレーに溶け込ませ、diagram は白背景に細線＋青単色で「引き算」の図解にする。どちらも design の 2ウェイト制・青単色アクセント・極端なホワイトスペースという原則の画像版。
+
+### 画像内テキスト禁止（noTextInImages）
+
+生成画像の中に文字を焼き込まない（`noTextInImages: true`）。生成テキストは崩れやすく、ブランドフォント（SF Pro / Hiragino）も守れないため。**文字は必ずスライド側の vars に置き、パターンがブランドフォントで描画する**。画像は無文字のビジュアルに徹することで、明朝禁止・2ウェイト制といったタイポルールを画像でも破らないようにする。
+
 ## パターンカタログ
 
 ### title-center

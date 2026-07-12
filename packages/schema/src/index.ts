@@ -30,6 +30,12 @@ export {
   type HarnessComposition,
   harnessPatternSchema,
   type HarnessPattern,
+  harnessImageStyleSchema,
+  type HarnessImageStyle,
+  harnessImageProviderSchema,
+  type HarnessImageProvider,
+  harnessImagesSchema,
+  type HarnessImages,
   harnessSchema,
   type Harness,
 } from "./harness.js";
