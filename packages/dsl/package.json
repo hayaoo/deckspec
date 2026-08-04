@@ -1,6 +1,7 @@
 {
   "name": "@deckspec/dsl",
   "version": "0.2.1",
+  "private": true,
   "files": [
     "dist",
     "src"
@@ -32,9 +33,5 @@
   "homepage": "https://github.com/hayaoo/deckspec",
   "bugs": {
     "url": "https://github.com/hayaoo/deckspec/issues"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
   }
 }

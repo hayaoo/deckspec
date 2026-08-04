@@ -1,30 +1,14 @@
 #!/usr/bin/env bash
-# scripts/publish.sh — workspace 内の各パッケージを npm CLI で publish する。
+# scripts/publish.sh — npm publish は廃止した (2026-08-04)。
 #
-# changesets/action から呼ばれる。npm Trusted Publisher (OIDC) を使うため、
-# pnpm publish ではなく npm publish を直接実行する (pnpm 9.x の OIDC 実装
-# は npm Trusted Publisher と組み合わせると 404 を返すバグがあるため)。
+# 全パッケージが private:true になったため、公開すべきものは何もない。
+# 本来は .github/workflows/release.yml の changesets/action から
+# `publish:` 指定ごと外すのが筋だが、workflow ファイルの更新には別途
+# 権限が要るため、暫定でこのスクリプトが publish 段を無効化している。
 #
-# 同じバージョンが既に npm に公開されている場合はスキップする。
+# workflow 側を更新したらこのファイルは削除してよい。
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-
-for pkg_json in "$ROOT"/packages/*/package.json "$ROOT"/themes/*/package.json; do
-  pkg_dir="$(dirname "$pkg_json")"
-  name="$(node -p "require('$pkg_json').name")"
-  version="$(node -p "require('$pkg_json').version")"
-
-  if [[ "$(node -p "require('$pkg_json').private || false")" == "true" ]]; then
-    echo "▸ skip $name (private)"
-    continue
-  fi
-
-  if npm view "$name@$version" version >/dev/null 2>&1; then
-    echo "▸ skip $name@$version (already published)"
-    continue
-  fi
-
-  echo "▸ publish $name@$version"
-  (cd "$pkg_dir" && npm publish --provenance --access public)
-done
+echo "npm publish is disabled: all @deckspec/* packages are private."
+echo "Distribution is via the GitHub source tree only (see README > Distribution)."
+exit 0

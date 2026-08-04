@@ -103,6 +103,10 @@ slides:
 }
 
 function generatePackageJson(): string {
+  // NOTE: @deckspec/* is no longer published to npm (see README "Distribution").
+  // This range still resolves to the frozen 0.2.x releases, but it will not track
+  // the repository. Scaffolded projects that need newer code should replace this
+  // with a file:/git dependency on a local build.
   return JSON.stringify(
     {
       private: true,

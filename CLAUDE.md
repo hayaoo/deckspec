@@ -31,11 +31,16 @@ pnpm dev            # 開発サーバー
 
 ## リリースフロー
 
+**npm への公開は廃止した (2026-08-04)。全パッケージが `private: true`。**
+
 1. changeset ファイルを `.changeset/` に作成
 2. main にマージ → GitHub Actions が Version PR を自動作成
-3. Version PR マージ → `pnpm -r publish --provenance` で npm 公開
+3. Version PR マージ → バージョン採番 + CHANGELOG 更新 + git タグのみ（publish はしない）
 
 固定グループ: cli, dsl, schema, renderer, theme-noir-display は同時リリース。
+
+配布は GitHub のソースのみ。利用側は clone + `pnpm build`、または `pnpm pack` の
+tarball を使う。npm 上の `0.2.1` 以前は残存するが更新されない。
 
 ## コーディング規約
 
@@ -50,4 +55,5 @@ pnpm dev            # 開発サーバー
 
 - `.env` や認証情報をコミットしない
 - シークレットは GitHub Secrets 経由で管理
-- npm provenance を有効化済み
+- npm への publish はしない（サプライチェーン攻撃の的になる面積を減らすため）。
+  `private: true` を外す変更を提案しないこと

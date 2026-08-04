@@ -27,9 +27,18 @@ Patterns encapsulate all HTML/React/Zod complexity. Deck authoring is YAML-only.
 
 ## Quick Start
 
+> **Note:** DeckSpec is no longer published to the npm registry. Install from source.
+> Versions up to `0.2.1` remain on npm but will not receive updates — see [Distribution](#distribution).
+
 ```bash
-# Install
-npm install -g @deckspec/cli
+# Build from source
+git clone https://github.com/hayaoo/deckspec
+cd deckspec
+pnpm install
+pnpm build
+
+# Link the CLI (or call it directly: node packages/cli/dist/cli.js)
+pnpm --filter @deckspec/cli exec npm link
 
 # Initialize a project with a theme
 deckspec init --theme noir-display
@@ -182,6 +191,20 @@ pnpm dev   # http://localhost:3002
 | `@deckspec/schema` | Base Zod schemas + utilities |
 | `@deckspec/renderer` | Pattern SSR + viewer generation + esbuild compilation |
 | `@deckspec/theme-noir-display` | Default theme — dark, minimal, Apple-inspired |
+
+## Distribution
+
+All packages are marked `private` and are **not published to the npm registry**. The
+source in this repository is the only supported distribution channel — clone it, or
+build tarballs locally with `pnpm pack`.
+
+This is a deliberate reduction of supply-chain surface: a single-maintainer package on
+a public registry is an attractive target for account-takeover worms (Shai-Hulud and
+similar), and the packages have few enough external consumers that the registry
+convenience is not worth that exposure.
+
+Versions up to `0.2.1` published before this change are still resolvable on npm. They
+are frozen and will not be updated; pin to the repository instead.
 
 ## License
 
