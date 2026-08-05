@@ -3,39 +3,37 @@ name: Release
 on:
   push:
     branches: [main]
-  workflow_dispatch: # NPM_TOKEN ローテーション後などに手動再実行するため
+  workflow_dispatch: # Version PR の作成に失敗したときなど手動で再実行するため
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+# npm への publish は廃止したため id-token (OIDC) は不要。
 permissions:
   contents: write      # changesets が Version PR・タグ作成に必要
   pull-requests: write # changesets が PR 更新に必要
-  id-token: write      # npm Trusted Publisher (OIDC) で publish するため
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
 
-      # Node 24 は npm 11.x をバンドルしており Trusted Publisher (OIDC) を
-      # 安定サポートする。pnpm 9 の OIDC 実装には既知バグがあるため、publish
-      # 段は scripts/publish.sh から npm CLI を直接呼ぶ。
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 24
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      # npm Trusted Publisher (OIDC) で publish。NPM_TOKEN は意図的に渡さない。
+      # レジストリへの公開はしない (全パッケージが private:true)。
+      # `changeset tag` は publish せず git タグだけを打つ。GitHub のソースが
+      # 唯一の配布経路になったため、タグは利用者の参照点として必須。
+      # publish 指定を丸ごと外すと changesets/action はタグを作らなくなる。
       - uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
         with:
-          publish: ./scripts/publish.sh
+          publish: pnpm exec changeset tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

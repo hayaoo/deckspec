@@ -3,7 +3,7 @@
 #
 # Usage: ./scripts/test-distribution.sh
 #
-# publish 前に実行し、ユーザーが体験するフローを再現する。
+# 配布 tarball を作る前に実行し、ユーザーが体験するフローを再現する。
 # モノレポの symlink や dist/ に依存しない、クリーンな環境でテストする。
 set -euo pipefail
 
@@ -30,7 +30,7 @@ cd "$REPO_ROOT"
 pnpm build > /dev/null 2>&1
 pass "pnpm build succeeded"
 
-# ─── Step 2: Pack all packages (simulate npm publish) ────────────────
+# ─── Step 2: Pack all packages (distribution tarballs) ───────────────
 log "Step 2: Packing all packages"
 cd "$REPO_ROOT/packages/cli"
 CLI_TGZ_PATH=$(pnpm pack --pack-destination "$TEST_DIR" 2>/dev/null | tail -1)
@@ -213,9 +213,9 @@ echo "  Results: $PASS passed, $FAIL failed"
 echo "════════════════════════════════════════"
 
 if [ $FAIL -gt 0 ]; then
-  echo "  ⚠ Fix failures before publishing!"
+  echo "  ⚠ Fix failures before distributing!"
   exit 1
 else
-  echo "  ✓ All checks passed. Safe to publish."
+  echo "  ✓ All checks passed. Safe to distribute."
   exit 0
 fi

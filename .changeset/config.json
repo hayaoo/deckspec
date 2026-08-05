@@ -4,8 +4,9 @@
   "commit": false,
   "fixed": [["@deckspec/cli", "@deckspec/dsl", "@deckspec/schema", "@deckspec/renderer", "@deckspec/theme-noir-display"]],
   "linked": [],
-  "access": "public",
+  "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [],
+  "privatePackages": { "version": true, "tag": true }
 }
