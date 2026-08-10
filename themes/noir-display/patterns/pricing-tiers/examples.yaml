@@ -1,0 +1,38 @@
+- name: "料金プラン"
+  description: "2〜3プランを価格と機能で提示"
+  vars:
+    heading: "シンプルな料金"
+    plans:
+      - name: "Free"
+        price: "¥0"
+        description: "まず試したい方に"
+        features:
+          - "集中タイマー"
+          - "基本の集中ログ"
+      - name: "Pro"
+        price: "¥980/月"
+        description: "毎日集中したい方に"
+        highlighted: true
+        features:
+          - "通知の自動遮断"
+          - "詳細な集中レポート"
+          - "カレンダー連携"
+- name: "Pricing tiers"
+  description: "Two pricing plans"
+  vars:
+    heading: "Simple pricing"
+    plans:
+      - name: "Starter"
+        price: "$0"
+        description: "For trying things out"
+        features:
+          - "Focus timer"
+          - "Basic focus log"
+      - name: "Pro"
+        price: "$9/mo"
+        description: "For daily deep work"
+        highlighted: true
+        features:
+          - "Automatic do-not-disturb"
+          - "Detailed reports"
+          - "Calendar sync"

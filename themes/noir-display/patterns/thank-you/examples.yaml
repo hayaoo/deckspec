@@ -1,0 +1,14 @@
+- name: "クロージング"
+  description: "CTA と連絡先を添えた締めのスライド"
+  vars:
+    headline: "集中を、習慣に。"
+    body: "今日から深い集中を取り戻しましょう。"
+    cta: "無料で始める"
+    link: "unfocus.app"
+- name: "Closing slide"
+  description: "Closing with a call to action"
+  vars:
+    headline: "Let's focus."
+    body: "Start reclaiming your deep work today."
+    cta: "Try it free"
+    link: "unfocus.app"

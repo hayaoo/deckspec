@@ -1,0 +1,32 @@
+- name: "課題の提示"
+  description: "2〜3枚のアイコン付きカードでペインを示す"
+  vars:
+    label: "現状の課題"
+    heading: "集中できない3つの理由"
+    challenges:
+      - title: "通知の割り込み"
+        icon: "bell-off"
+        items:
+          - "5分おきに集中が切れる"
+          - "戻るのに20分かかる"
+      - title: "時間の見えなさ"
+        icon: "clock"
+        items:
+          - "何に時間を使ったか不明"
+          - "振り返りができない"
+- name: "Problem framing"
+  description: "Two to three pain-point cards"
+  vars:
+    label: "The problem"
+    heading: "Why deep work is hard"
+    challenges:
+      - title: "Constant pings"
+        icon: "bell-off"
+        items:
+          - "Focus breaks every few minutes"
+          - "Recovery takes 20 minutes"
+      - title: "Invisible time"
+        icon: "clock"
+        items:
+          - "No record of where hours go"
+          - "Nothing to reflect on"

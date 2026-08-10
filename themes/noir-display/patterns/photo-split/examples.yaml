@@ -1,0 +1,16 @@
+- name: "ビジュアルストーリー"
+  description: "写真とテキストを50/50で並べる"
+  vars:
+    label: "ある1日"
+    heading: "静かな朝から始まる"
+    body: "通知を止め、タイマーを押す。それだけで深い集中に入れる。Unfocus は、そのきっかけを毎日の習慣に変えます。"
+    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+    imagePosition: "right"
+- name: "Product story"
+  description: "Half image, half text"
+  vars:
+    label: "A moment"
+    heading: "Deep work, on demand"
+    body: "Mute the world, start the timer, and slip into flow. Unfocus turns that one small ritual into a daily habit."
+    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+    imagePosition: "left"

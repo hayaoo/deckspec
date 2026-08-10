@@ -1,0 +1,26 @@
+- name: "利用フロー"
+  description: "3〜5ステップのプロセスを横並びで図解"
+  vars:
+    label: "使い方"
+    heading: "集中を始めるまでの流れ"
+    steps:
+      - title: "予定を接続"
+        description: "空き時間を自動検出。"
+      - title: "儀式を選ぶ"
+        description: "自分に合うタイマーを設定。"
+      - title: "集中する"
+        description: "通知は自動で止まる。"
+- name: "Content pipeline"
+  description: "Process steps left to right"
+  vars:
+    label: "Pipeline"
+    heading: "From idea to published"
+    steps:
+      - title: "Capture"
+        description: "Collect raw ideas."
+      - title: "Draft"
+        description: "Shape the first version."
+      - title: "Review"
+        description: "Edit and refine."
+      - title: "Publish"
+        description: "Ship it."

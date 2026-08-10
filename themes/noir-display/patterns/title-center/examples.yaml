@@ -1,0 +1,10 @@
+- name: "プロダクトローンチのタイトル"
+  description: "日本語のプロダクト発表デッキの冒頭"
+  vars:
+    title: "Unfocus 1.0"
+    subtitle: "集中を取り戻すためのミニマルタイマー"
+- name: "Investor pitch cover"
+  description: "Opening slide for an English pitch deck"
+  vars:
+    title: "Rethinking Focus"
+    subtitle: "A calmer way to do deep work"

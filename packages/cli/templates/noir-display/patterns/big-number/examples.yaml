@@ -1,0 +1,16 @@
+- name: "継続率のインパクト"
+  description: "単一の重要数値を1枚で強調"
+  vars:
+    label: "30日継続率"
+    value: "92"
+    unit: "%"
+    headline: "習慣として定着している"
+    description: "多くのユーザーが1ヶ月後も毎日使い続けています。"
+- name: "Time saved"
+  description: "Single headline metric"
+  vars:
+    label: "Weekly impact"
+    value: "6.4"
+    unit: "hrs"
+    headline: "Reclaimed every week"
+    description: "Average deep-work time recovered per active user."

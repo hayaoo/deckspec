@@ -92,7 +92,17 @@ Create `themes/<theme>/patterns/<name>/examples.yaml`:
         value: "Value 1"
 ```
 
-### 5. Validate and preview
+### 5. Lint (design self-check)
+
+Run the theme self-check so the new pattern's source is evaluated against the machine-readable design rules (`themes/<theme>/harness.json`):
+
+```bash
+npx deckspec lint --theme <theme>
+```
+
+Fix any **errors** the linter reports on your pattern (pure black text, `font-weight: 700`/`bold`, serif fonts) and review warnings (sub-minimum font sizes, shadows darker than the cap). This catches design drift the Zod schema cannot.
+
+### 6. Validate and preview
 
 Create a test deck referencing the new pattern, validate it, and preview with `npx deckspec dev`.
 **Visually verify that content does not overflow the 16:9 slide area.**

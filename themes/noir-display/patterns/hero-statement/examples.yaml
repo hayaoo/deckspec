@@ -1,0 +1,12 @@
+- name: "ビジョンステートメント"
+  description: "1文で世界観を提示するインパクトスライド"
+  vars:
+    eyebrow: "私たちの考え"
+    headline: "集中は\n才能ではなく設計だ"
+    body: "環境を整えれば、誰でも深い集中に入れる。"
+- name: "Mission statement"
+  description: "Single-sentence vision slide"
+  vars:
+    eyebrow: "Why we exist"
+    headline: "Focus is a\ndesign problem"
+    body: "The right environment lets anyone reach deep work."
